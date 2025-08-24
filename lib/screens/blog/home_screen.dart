@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../services/daily_content_service.dart';
 import '../../models/daily_content_model.dart';
-import '../admin/admin_login_screen.dart';
+import '../admin/admin_login_screen.dart';  // Import AdminLoginScreen
+import 'blog_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   DailyContentModel? todaysContent;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _loadTodaysContent();
   }
 
@@ -52,44 +53,58 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ],
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Daily Content Section
-            if (isLoading)
-              Center(child: CircularProgressIndicator())
-            else if (todaysContent != null)
-              _buildDailyContentCard()
-            else
-              _buildEmptyDailyContent(),
-            
-            SizedBox(height: 20),
-            
-            // Welcome message
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome to Your Mental Health Journey',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'This is a safe space for mental health awareness, self-help tips, and daily reflections. Start your journey towards better mental wellbeing.',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(icon: Icon(Icons.home), text: 'Daily'),
+            Tab(icon: Icon(Icons.article), text: 'Blog Posts'),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          // Daily content tab
+          SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isLoading)
+                  Center(child: CircularProgressIndicator())
+                else if (todaysContent != null)
+                  _buildDailyContentCard()
+                else
+                  _buildEmptyDailyContent(),
+                
+                SizedBox(height: 20),
+                
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome to Your Mental Health Journey',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'This is a safe space for mental health awareness, self-help tips, and daily reflections. Start your journey towards better mental wellbeing.',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Blog posts tab
+          BlogHomeScreen(),
+        ],
       ),
     );
   }
@@ -174,5 +189,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }
