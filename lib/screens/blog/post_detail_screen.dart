@@ -83,35 +83,35 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Future<void> _addComment() async {
-    if (_commentController.text.trim().isEmpty) return;
+  if (_commentController.text.trim().isEmpty) return;
 
-    try {
-      // Enable anonymous commenting
-      await AuthService.signInAnonymously();
+  try {
+    // Remove the anonymous sign-in requirement
+    // Just create the comment directly
+    final comment = CommentModel(
+      postId: widget.post.id,
+      commenterName: _nameController.text.trim().isEmpty 
+          ? 'Anonymous' 
+          : _nameController.text.trim(),
+      commentText: _commentController.text.trim(),
+    );
 
-      final comment = CommentModel(
-        postId: widget.post.id,
-        commenterName: _nameController.text.trim().isEmpty 
-            ? 'Anonymous' 
-            : _nameController.text.trim(),
-        commentText: _commentController.text.trim(),
-      );
+    await CommentService.addComment(comment);
 
-      await CommentService.addComment(comment);
+    _commentController.clear();
+    _nameController.clear();
+    _loadComments();
 
-      _commentController.clear();
-      _nameController.clear();
-      _loadComments();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Comment added!'), backgroundColor: Colors.green),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error adding comment: $e'), backgroundColor: Colors.red),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Comment added!'), backgroundColor: Colors.green),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error adding comment: $e'), backgroundColor: Colors.red),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
