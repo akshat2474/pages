@@ -11,6 +11,26 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.env
+.env.local
+.env.production
+
+scripts/dev_run.sh
+secrets.txt
+.env*
+
+# Flutter generated
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
 
 # IntelliJ related
 *.iml
