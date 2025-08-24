@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../services/auth_service.dart';
 import '../../services/daily_content_service.dart';
 import '../../models/daily_content_model.dart';
 import '../admin/admin_login_screen.dart';  // Import AdminLoginScreen
 import 'blog_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

@@ -6,7 +6,6 @@ import '../../models/post_model.dart';
 import '../../models/comment_model.dart';
 import '../../services/comment_service.dart';
 import '../../services/post_service.dart';
-import '../../services/auth_service.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final PostModel post;

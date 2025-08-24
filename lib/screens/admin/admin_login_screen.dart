@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
-import '../../services/post_service.dart';
-import '../../services/daily_content_service.dart';
 import '../../models/post_model.dart';
-import '../../models/daily_content_model.dart';
 import '../blog/home_screen.dart';
 import '../../config/supabase_config.dart';
 import 'write_post_tab.dart';
@@ -12,6 +9,8 @@ import 'daily_content_tab.dart';
 
 // ADD THIS CLASS - This was missing!
 class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({super.key});
+
   @override
   _AdminLoginScreenState createState() => _AdminLoginScreenState();
 }
@@ -111,12 +110,12 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _signIn,
-                child: _isLoading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text('Login'),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
+                child: _isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text('Login'),
               ),
             ),
           ],

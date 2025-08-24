@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../models/post_model.dart';
 import '../../services/post_service.dart';
-import '../../config/supabase_config.dart';
 
 class WritePostTab extends StatefulWidget {
   final VoidCallback onPostCreated;
 
-  const WritePostTab({required this.onPostCreated});
+  const WritePostTab({super.key, required this.onPostCreated});
 
   @override
   _WritePostTabState createState() => _WritePostTabState();
