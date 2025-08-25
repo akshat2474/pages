@@ -19,18 +19,17 @@ import '../../widgets/blinking_background.dart';
 import '../../widgets/footer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 class GreenUnderline extends StatelessWidget {
   const GreenUnderline({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 65, 
-      height: 6,
+      width: 65,
+      height: 5,
       decoration: BoxDecoration(
         color: const Color(0xFFD3EADD),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(2),
       ),
     );
   }
@@ -132,42 +131,47 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
         children: [
           if (isDarkMode)
             const Positioned.fill(child: BlinkingDotsBackground()),
-          CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(child: _buildHeader()),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    FadeInSlideUp(
-                      delay: const Duration(milliseconds: 200),
-                      child: _buildHeroSection(),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth > 800;
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(child: _buildHeader(isDesktop)),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        FadeInSlideUp(
+                          delay: const Duration(milliseconds: 200),
+                          child: _buildHeroSection(isDesktop),
+                        ),
+                        const SizedBox(height: 80),
+                        if (isLoading)
+                          const DailyContentSkeleton()
+                        else if (todaysContent != null)
+                          FadeInSlideUp(
+                            delay: const Duration(milliseconds: 400),
+                            child: _buildDailyContentSection(),
+                          ),
+                        const SizedBox(height: 80),
+                        FadeInSlideUp(
+                          delay: const Duration(milliseconds: 600),
+                          child: _buildFeaturedSection(isDesktop),
+                        ),
+                        const SizedBox(height: 80),
+                        const Footer(),
+                      ],
                     ),
-                    const SizedBox(height: 80),
-                    if (isLoading)
-                      const DailyContentSkeleton()
-                    else if (todaysContent != null)
-                      FadeInSlideUp(
-                        delay: const Duration(milliseconds: 400),
-                        child: _buildDailyContentSection(),
-                      ),
-                    const SizedBox(height: 80),
-                    FadeInSlideUp(
-                      delay: const Duration(milliseconds: 600),
-                      child: _buildFeaturedSection(),
-                    ),
-                    const SizedBox(height: 80),
-                    const Footer(),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isDesktop) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -179,79 +183,90 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
               context,
             ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
-          Row(
-            children: [
-              Consumer<ThemeProvider>(
-                builder: (context, themeProvider, child) {
-                  return ThemeToggleAnimation(
-                    isDarkMode: themeProvider.isDarkMode,
-                    onToggle: () => themeProvider.toggleTheme(),
-                  );
-                },
-              ),
-              const SizedBox(width: 16),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'About',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
+          if (isDesktop)
+            Row(
+              children: [
+                Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, child) {
+                    return ThemeToggleAnimation(
+                      isDarkMode: themeProvider.isDarkMode,
+                      onToggle: () => themeProvider.toggleTheme(),
+                    );
+                  },
+                ),
+                const SizedBox(width: 16),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'About',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 24),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'Articles',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                const SizedBox(width: 24),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Articles',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 24),
-              StreamBuilder<AuthState>(
-                stream: SupabaseConfig.client.auth.onAuthStateChange,
-                builder: (context, snapshot) {
-                  final session = snapshot.data?.session;
+                const SizedBox(width: 24),
+                StreamBuilder<AuthState>(
+                  stream: SupabaseConfig.client.auth.onAuthStateChange,
+                  builder: (context, snapshot) {
+                    final session = snapshot.data?.session;
 
-                  if (session != null && AuthService.isAdmin) {
-                    return ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).push(FadePageRoute(page: const AdminDashboard()));
-                      },
-                      icon: const Icon(Icons.dashboard, size: 16),
-                      label: const Text('Dashboard'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
+                    if (session != null && AuthService.isAdmin) {
+                      return ElevatedButton.icon(
+                        onPressed: () {
+                          // TODO: implement AdminDashboard
+                          // Navigator.of(
+                          //   context,
+                          // ).push(FadePageRoute(page: const AdminDashboard()));
+                        },
+                        icon: const Icon(Icons.dashboard, size: 16),
+                        label: const Text('Dashboard'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    return IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          SlideUpPageRoute(page: const AdminLoginScreen()),
-                        );
-                      },
-                      icon: const Icon(Icons.person_outline),
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
+                      );
+                    } else {
+                      return IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            SlideUpPageRoute(page: const AdminLoginScreen()),
+                          );
+                        },
+                        icon: const Icon(Icons.person_outline),
+                      );
+                    }
+                  },
+                ),
+              ],
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                // TODO: implement drawer
+              },
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildHeroSection() {
-    final heroTextStyle = Theme.of(context).textTheme.displayLarge;
+  Widget _buildHeroSection(bool isDesktop) {
+    final heroTextStyle = isDesktop
+        ? Theme.of(context).textTheme.displayLarge
+        : Theme.of(context).textTheme.displayMedium;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
       child: Column(
@@ -263,8 +278,10 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
               color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                  color:
-                      Theme.of(context).colorScheme.secondary.withOpacity(0.2)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .secondary
+                      .withOpacity(0.2)),
             ),
             child: Text(
               'Mental Health & Wellbeing',
@@ -293,16 +310,18 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 left: 0,
                 child: const GreenUnderline(),
               ),
-              Positioned(
-                top: -5,
-                right: 110,
-                child: const PinkSquiggle(),
-              ),
+              if (isDesktop)
+                Positioned(
+                  top: -5,
+                  right: 110,
+                  child: const PinkSquiggle(),
+                ),
             ],
           ),
           const SizedBox(height: 24),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width:
+                isDesktop ? MediaQuery.of(context).size.width * 0.6 : null,
             child: Text(
               'Discover insights, tips, and inspiration for your mental wellbeing. A safe space for growth, healing, and self-discovery.',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -404,7 +423,8 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
           const SizedBox(height: 24),
           if (todaysContent!.wordOfDay != null) ...[
             _buildWordSection(),
-            if (todaysContent!.thoughtOfDay != null) const SizedBox(height: 24),
+            if (todaysContent!.thoughtOfDay != null)
+              const SizedBox(height: 24),
           ],
           if (todaysContent!.thoughtOfDay != null) ...[
             _buildThoughtSection(),
@@ -546,7 +566,7 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
     );
   }
 
-  Widget _buildFeaturedSection() {
+  Widget _buildFeaturedSection(bool isDesktop) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -563,7 +583,7 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
             const PostListSkeleton(itemCount: 3)
           else if (_featuredPosts.isEmpty)
             _buildEmptyState()
-          else
+          else if (isDesktop)
             StaggeredListAnimation(
               children: _featuredPosts.asMap().entries.map((entry) {
                 final index = entry.key;
@@ -575,6 +595,19 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                   child: _buildFeaturedCard(post, index == 0),
                 );
               }).toList(),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _featuredPosts.length,
+              itemBuilder: (context, index) {
+                final post = _featuredPosts[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: _buildFeaturedCard(post, false),
+                );
+              },
             ),
         ],
       ),

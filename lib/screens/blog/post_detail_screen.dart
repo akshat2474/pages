@@ -133,203 +133,189 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.teal.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      widget.post.category.displayName,
-                      style: TextStyle(
-                        color: Colors.teal,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  widget.post.category.displayName,
+                  style: TextStyle(
+                    color: Colors.teal,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(height: 16),
-
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                widget.post.title,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                  SizedBox(width: 4),
                   Text(
-                    widget.post.title,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    DateFormat('MMMM dd, yyyy').format(widget.post.createdAt),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Spacer(),
+                  Icon(Icons.favorite, size: 16, color: Colors.red),
+                  SizedBox(width: 4),
+                  Text('$_likeCount'),
+                  SizedBox(width: 16),
+                  Icon(Icons.comment, size: 16, color: Colors.blue),
+                  SizedBox(width: 4),
+                  Text('${_comments.length}'),
+                ],
+              ),
+              SizedBox(height: 24),
+              MarkdownBody(
+                data: widget.post.content,
+                styleSheet: MarkdownStyleSheet(
+                  p: Theme.of(context).textTheme.bodyLarge,
+                  h1: Theme.of(context).textTheme.headlineLarge,
+                  h2: Theme.of(context).textTheme.headlineMedium,
+                  h3: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              Divider(thickness: 1, height: 40),
+              _buildCommentsSection(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCommentsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Comments (${_comments.length})',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        SizedBox(height: 16),
+        Card(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Your Name (Optional)',
+                    border: OutlineInputBorder(),
+                    hintText: 'Anonymous',
+                  ),
+                ),
+                SizedBox(height: 12),
+                TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                    labelText: 'Write a comment...',
+                    border: OutlineInputBorder(),
+                    hintText: 'Share your thoughts...',
+                  ),
+                  maxLines: 3,
+                ),
+                SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _addComment,
+                    child: Text('Post Comment'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        if (_isLoading)
+          Center(child: CircularProgressIndicator())
+        else if (_comments.isEmpty)
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.comment_outlined,
+                    size: 48,
+                    color: Colors.grey,
                   ),
                   SizedBox(height: 8),
-
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                      SizedBox(width: 4),
-                      Text(
-                        DateFormat(
-                          'MMMM dd, yyyy',
-                        ).format(widget.post.createdAt),
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Spacer(),
-                      Icon(Icons.favorite, size: 16, color: Colors.red),
-                      SizedBox(width: 4),
-                      Text('$_likeCount'),
-                      SizedBox(width: 16),
-                      Icon(Icons.comment, size: 16, color: Colors.blue),
-                      SizedBox(width: 4),
-                      Text('${_comments.length}'),
-                    ],
-                  ),
-                  SizedBox(height: 24),
-
-                  MarkdownBody(
-                    data: widget.post.content,
-                    styleSheet: MarkdownStyleSheet(
-                      p: Theme.of(context).textTheme.bodyLarge,
-                      h1: Theme.of(context).textTheme.headlineLarge,
-                      h2: Theme.of(context).textTheme.headlineMedium,
-                      h3: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                  ),
+                  Text('No comments yet'),
+                  Text('Be the first to share your thoughts!'),
                 ],
               ),
             ),
-
-            Divider(thickness: 1),
-
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Comments (${_comments.length})',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  SizedBox(height: 16),
-
-                  Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
+          )
+        else
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _comments.length,
+            itemBuilder: (context, index) {
+              final comment = _comments[index];
+              return Card(
+                margin: EdgeInsets.only(bottom: 8),
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          TextField(
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                              labelText: 'Your Name (Optional)',
-                              border: OutlineInputBorder(),
-                              hintText: 'Anonymous',
+                          CircleAvatar(
+                            radius: 16,
+                            backgroundColor: Colors.teal,
+                            child: Text(
+                              comment.commenterName[0].toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 12),
-                          TextField(
-                            controller: _commentController,
-                            decoration: InputDecoration(
-                              labelText: 'Write a comment...',
-                              border: OutlineInputBorder(),
-                              hintText: 'Share your thoughts...',
+                          SizedBox(width: 8),
+                          Text(
+                            comment.commenterName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
-                            maxLines: 3,
                           ),
-                          SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _addComment,
-                              child: Text('Post Comment'),
+                          Spacer(),
+                          Text(
+                            DateFormat('MMM dd, yyyy').format(comment.createdAt),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      SizedBox(height: 8),
+                      Text(comment.commentText),
+                    ],
                   ),
-                  SizedBox(height: 16),
-
-                  if (_isLoading)
-                    Center(child: CircularProgressIndicator())
-                  else if (_comments.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.comment_outlined,
-                              size: 48,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(height: 8),
-                            Text('No comments yet'),
-                            Text('Be the first to share your thoughts!'),
-                          ],
-                        ),
-                      ),
-                    )
-                  else
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: _comments.length,
-                      itemBuilder: (context, index) {
-                        final comment = _comments[index];
-                        return Card(
-                          margin: EdgeInsets.only(bottom: 8),
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 16,
-                                      backgroundColor: Colors.teal,
-                                      child: Text(
-                                        comment.commenterName[0].toUpperCase(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      comment.commenterName,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      DateFormat(
-                                        'MMM dd, yyyy',
-                                      ).format(comment.createdAt),
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8),
-                                Text(comment.commentText),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+                ),
+              );
+            },
+          ),
+      ],
     );
   }
 
