@@ -176,6 +176,7 @@ class _AdminDashboardState extends State<AdminDashboard>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -238,14 +239,20 @@ class _AdminDashboardState extends State<AdminDashboard>
             ],
           ),
         ),
-        body: TabBarView(
-          controller: _tabController,
+        body: Stack(
           children: [
-            WritePostTab(onPostCreated: _loadPosts),
-            ManagePostsTab(
-                posts: _posts, isLoading: _isLoading, onRefresh: _loadPosts),
-            DailyContentTab(),
-            EditAboutTab(),
+            if (isDarkMode)
+              const Positioned.fill(child: BlinkingDotsBackground()),
+            TabBarView(
+              controller: _tabController,
+              children: [
+                WritePostTab(onPostCreated: _loadPosts),
+                ManagePostsTab(
+                    posts: _posts, isLoading: _isLoading, onRefresh: _loadPosts),
+                DailyContentTab(),
+                EditAboutTab(),
+              ],
+            ),
           ],
         ),
       ),
