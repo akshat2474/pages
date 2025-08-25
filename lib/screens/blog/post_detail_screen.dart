@@ -1,3 +1,4 @@
+import 'package:blog/utils/social_share_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
@@ -38,9 +39,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       final comments = await CommentService.getCommentsForPost(widget.post.id);
       setState(() => _comments = comments);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading comments: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading comments: $e')));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -81,33 +82,38 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Future<void> _addComment() async {
-  if (_commentController.text.trim().isEmpty) return;
+    if (_commentController.text.trim().isEmpty) return;
 
-  try {
-    final comment = CommentModel(
-      postId: widget.post.id,
-      commenterName: _nameController.text.trim().isEmpty 
-          ? 'Anonymous' 
-          : _nameController.text.trim(),
-      commentText: _commentController.text.trim(),
-    );
+    try {
+      final comment = CommentModel(
+        postId: widget.post.id,
+        commenterName: _nameController.text.trim().isEmpty
+            ? 'Anonymous'
+            : _nameController.text.trim(),
+        commentText: _commentController.text.trim(),
+      );
 
-    await CommentService.addComment(comment);
+      await CommentService.addComment(comment);
 
-    _commentController.clear();
-    _nameController.clear();
-    _loadComments();
+      _commentController.clear();
+      _nameController.clear();
+      _loadComments();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Comment added!'), backgroundColor: Colors.green),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error adding comment: $e'), backgroundColor: Colors.red),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Comment added!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error adding comment: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +125,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             icon: Icon(_isLiked ? Icons.favorite : Icons.favorite_border),
             color: _isLiked ? Colors.red : Colors.grey,
             onPressed: _toggleLike,
+          ),
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () => SocialShareUtil.sharePost(widget.post),
           ),
         ],
       ),
@@ -147,7 +157,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   SizedBox(height: 16),
 
-                  
                   Text(
                     widget.post.title,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -161,7 +170,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                       SizedBox(width: 4),
                       Text(
-                        DateFormat('MMMM dd, yyyy').format(widget.post.createdAt),
+                        DateFormat(
+                          'MMMM dd, yyyy',
+                        ).format(widget.post.createdAt),
                         style: TextStyle(color: Colors.grey),
                       ),
                       Spacer(),
@@ -247,7 +258,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         padding: EdgeInsets.all(32),
                         child: Column(
                           children: [
-                            Icon(Icons.comment_outlined, size: 48, color: Colors.grey),
+                            Icon(
+                              Icons.comment_outlined,
+                              size: 48,
+                              color: Colors.grey,
+                            ),
                             SizedBox(height: 8),
                             Text('No comments yet'),
                             Text('Be the first to share your thoughts!'),
@@ -276,18 +291,28 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                       backgroundColor: Colors.teal,
                                       child: Text(
                                         comment.commenterName[0].toUpperCase(),
-                                        style: TextStyle(color: Colors.white, fontSize: 12),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: 8),
                                     Text(
                                       comment.commenterName,
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     Spacer(),
                                     Text(
-                                      DateFormat('MMM dd, yyyy').format(comment.createdAt),
-                                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                                      DateFormat(
+                                        'MMM dd, yyyy',
+                                      ).format(comment.createdAt),
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ],
                                 ),

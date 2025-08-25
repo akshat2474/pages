@@ -15,6 +15,10 @@ dependencies:
   flutter_markdown: ^0.7.7+1
   shared_preferences: ^2.2.3
   intl: ^0.20.2
+  provider: ^6.1.2
+  share_plus: ^11.1.0
+  reading_time: ^2.0.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

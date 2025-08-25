@@ -1,3 +1,4 @@
+import 'package:blog/utils/reading_time_util.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/post_model.dart';
@@ -33,9 +34,9 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
       }
       setState(() => _posts = posts);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading posts: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading posts: $e')));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -60,17 +61,21 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
                 },
               ),
               SizedBox(width: 8),
-              ...PostCategory.values.map((category) => Padding(
-                padding: EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: Text(category.displayName),
-                  selected: _selectedCategory == category,
-                  onSelected: (selected) {
-                    setState(() => _selectedCategory = selected ? category : null);
-                    _loadPosts();
-                  },
+              ...PostCategory.values.map(
+                (category) => Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: FilterChip(
+                    label: Text(category.displayName),
+                    selected: _selectedCategory == category,
+                    onSelected: (selected) {
+                      setState(
+                        () => _selectedCategory = selected ? category : null,
+                      );
+                      _loadPosts();
+                    },
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
         ),
@@ -79,97 +84,152 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
               : _posts.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.article_outlined, size: 64, color: Colors.grey),
-                          SizedBox(height: 16),
-                          Text('No posts available', style: Theme.of(context).textTheme.headlineSmall),
-                          Text('Check back later for new content'),
-                        ],
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.article_outlined,
+                        size: 64,
+                        color: Colors.grey,
                       ),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: _loadPosts,
-                      child: ListView.builder(
-                        padding: EdgeInsets.all(16),
-                        itemCount: _posts.length,
-                        itemBuilder: (context, index) {
-                          final post = _posts[index];
-                          return Card(
-                            margin: EdgeInsets.only(bottom: 16),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PostDetailScreen(post: post),
+                      SizedBox(height: 16),
+                      Text(
+                        'No posts available',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      Text('Check back later for new content'),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _loadPosts,
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(16),
+                    itemCount: _posts.length,
+                    itemBuilder: (context, index) {
+                      final post = _posts[index];
+                      return Card(
+                        margin: EdgeInsets.only(bottom: 16),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PostDetailScreen(post: post),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
                                   ),
-                                );
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  decoration: BoxDecoration(
+                                    color: Colors.teal.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    post.category.displayName,
+                                    style: TextStyle(
+                                      color: Colors.teal,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+
+                                Text(
+                                  post.title,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                                SizedBox(height: 8),
+
+                                Text(
+                                  post.excerpt ??
+                                      '${post.content.substring(0, post.content.length > 150 ? 150 : post.content.length)}...',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 12),
+                                Row(
                                   children: [
+                                    Text(
+                                      DateFormat(
+                                        'MMM dd, yyyy',
+                                      ).format(post.createdAt),
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.color,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      width: 4,
+                                      height: 4,
                                       decoration: BoxDecoration(
-                                        color: Colors.teal.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        post.category.displayName,
-                                        style: TextStyle(
-                                          color: Colors.teal,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.color,
+                                        shape: BoxShape.circle,
                                       ),
                                     ),
-                                    SizedBox(height: 8),
-
+                                    SizedBox(width: 8),
                                     Text(
-                                      post.title,
-                                      style: Theme.of(context).textTheme.headlineSmall,
+                                      ReadingTimeUtil.calculateReadingTime(
+                                        post.content,
+                                      ),
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.color,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                    SizedBox(height: 8),
-
-                                    Text(
-                                      post.excerpt ?? '${post.content.substring(0, post.content.length > 150 ? 150 : post.content.length)}...',
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 12),
-
+                                    SizedBox(width: 16),
                                     Row(
                                       children: [
-                                        Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                                        Icon(
+                                          Icons.favorite_border,
+                                          size: 14,
+                                          color: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium?.color,
+                                        ),
                                         SizedBox(width: 4),
                                         Text(
-                                          DateFormat('MMM dd, yyyy').format(post.createdAt),
-                                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                                          '${post.likesCount}',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.color,
+                                          ),
                                         ),
-                                        Spacer(),
-                                        Icon(Icons.favorite, size: 16, color: Colors.red),
-                                        SizedBox(width: 4),
-                                        Text('${post.likesCount}'),
-                                        SizedBox(width: 16),
-                                        Icon(Icons.visibility, size: 16, color: Colors.blue),
-                                        SizedBox(width: 4),
-                                        Text('${post.viewsCount}'),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
         ),
       ],
     );
