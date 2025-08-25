@@ -39,9 +39,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       final comments = await CommentService.getCommentsForPost(widget.post.id);
       setState(() => _comments = comments);
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error loading comments: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading comments: $e')),
+      );
     } finally {
       setState(() => _isLoading = false);
     }
@@ -100,7 +100,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       _loadComments();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Comment added!'),
           backgroundColor: Colors.green,
         ),
@@ -115,11 +115,19 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     }
   }
 
+  // NEW: Enhanced markdown spacing function
+  String _enhanceMarkdownSpacing(String content) {
+    return content
+        .replaceAll('\r\n', '\n') // Normalize line endings
+        .replaceAll('\n\n', '\n\n&nbsp;\n\n') // Add extra space between paragraphs
+        .replaceAll(RegExp(r'\n{4,}'), '\n\n&nbsp;\n\n'); // Clean up excessive breaks
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blog Post'),
+        title: const Text('Blog Post'),
         actions: [
           IconButton(
             icon: Icon(_isLiked ? Icons.favorite : Icons.favorite_border),
@@ -127,7 +135,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             onPressed: _toggleLike,
           ),
           IconButton(
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () => SocialShareUtil.sharePost(widget.post),
           ),
         ],
@@ -139,20 +147,20 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.teal.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
                   widget.post.category.displayName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.teal,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 widget.post.title,
                 style: Theme.of(context)
@@ -160,36 +168,53 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     .headlineMedium
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                  SizedBox(width: 4),
+                  const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                  const SizedBox(width: 4),
                   Text(
                     DateFormat('MMMM dd, yyyy').format(widget.post.createdAt),
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
-                  Spacer(),
-                  Icon(Icons.favorite, size: 16, color: Colors.red),
-                  SizedBox(width: 4),
+                  const Spacer(),
+                  const Icon(Icons.favorite, size: 16, color: Colors.red),
+                  const SizedBox(width: 4),
                   Text('$_likeCount'),
-                  SizedBox(width: 16),
-                  Icon(Icons.comment, size: 16, color: Colors.blue),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 16),
+                  const Icon(Icons.comment, size: 16, color: Colors.blue),
+                  const SizedBox(width: 4),
                   Text('${_comments.length}'),
                 ],
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
+              
+              // UPDATED: Use enhanced markdown spacing with MarkdownBody
               MarkdownBody(
-                data: widget.post.content,
-                styleSheet: MarkdownStyleSheet(
-                  p: Theme.of(context).textTheme.bodyLarge,
-                  h1: Theme.of(context).textTheme.headlineLarge,
-                  h2: Theme.of(context).textTheme.headlineMedium,
-                  h3: Theme.of(context).textTheme.headlineSmall,
+                data: _enhanceMarkdownSpacing(widget.post.content),
+                styleSheet: MarkdownStyleSheet.fromTheme(
+                  Theme.of(context),
+                ).copyWith(
+                  p: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    height: 1.8, // Increased line height for better readability
+                  ),
+                  h1: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  h2: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  h3: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  h1Padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  h2Padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  blockquotePadding: const EdgeInsets.all(16),
                 ),
+                softLineBreak: false, // Turn off to force paragraph breaks
               ),
-              Divider(thickness: 1, height: 40),
+              
+              const Divider(thickness: 1, height: 40),
               _buildCommentsSection(),
             ],
           ),
@@ -206,47 +231,47 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           'Comments (${_comments.length})',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Card(
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Your Name (Optional)',
                     border: OutlineInputBorder(),
                     hintText: 'Anonymous',
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _commentController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Write a comment...',
                     border: OutlineInputBorder(),
                     hintText: 'Share your thoughts...',
                   ),
                   maxLines: 3,
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _addComment,
-                    child: Text('Post Comment'),
+                    child: const Text('Post Comment'),
                   ),
                 ),
               ],
             ),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         if (_isLoading)
-          Center(child: CircularProgressIndicator())
+          const Center(child: CircularProgressIndicator())
         else if (_comments.isEmpty)
-          Center(
+          const Center(
             child: Padding(
               padding: EdgeInsets.all(32),
               child: Column(
@@ -271,9 +296,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             itemBuilder: (context, index) {
               final comment = _comments[index];
               return Card(
-                margin: EdgeInsets.only(bottom: 8),
+                margin: const EdgeInsets.only(bottom: 8),
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -284,30 +309,30 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             backgroundColor: Colors.teal,
                             child: Text(
                               comment.commenterName[0].toUpperCase(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
                             comment.commenterName,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Text(
                             DateFormat('MMM dd, yyyy').format(comment.createdAt),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 12,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(comment.commentText),
                     ],
                   ),
