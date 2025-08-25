@@ -1,5 +1,6 @@
 import 'package:blog/screens/admin/edit_about_tab.dart';
 import 'package:blog/screens/blog/noter_home_screen.dart';
+import 'package:blog/widgets/blinking_background.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../models/post_model.dart';
@@ -41,9 +42,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         _errorMessage = 'Login failed: ${e.toString()}';
       });
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -55,66 +58,73 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(title: Text('Admin Login')),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.admin_panel_settings, size: 64, color: Colors.teal),
-            SizedBox(height: 24),
-            Text(
-              'Admin Access',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Enter your password to access the admin panel',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 24),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
-              ),
-              obscureText: true,
-              onSubmitted: (_) => _signIn(),
-            ),
-            SizedBox(height: 16),
-            if (_errorMessage != null) ...[
-              Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+      body: Stack(
+        children: [
+          if (isDarkMode)
+            const Positioned.fill(child: BlinkingDotsBackground()),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.admin_panel_settings, size: 64, color: Colors.teal),
+                SizedBox(height: 24),
+                Text(
+                  'Admin Access',
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                child: Text(
-                  _errorMessage!,
-                  style: TextStyle(color: Colors.red),
+                SizedBox(height: 8),
+                Text(
+                  'Enter your password to access the admin panel',
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-              ),
-              SizedBox(height: 16),
-            ],
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _signIn,
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                SizedBox(height: 24),
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                  obscureText: true,
+                  onSubmitted: (_) => _signIn(),
                 ),
-                child: _isLoading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text('Login'),
-              ),
+                SizedBox(height: 16),
+                if (_errorMessage != null) ...[
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                ],
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _signIn,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: _isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text('Login'),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
