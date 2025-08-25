@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Light theme colors
-  static const Color lightPrimary = Color(0xFF1A1A1A);
-  static const Color lightSecondary = Color(0xFF6B7280);
-  static const Color lightAccent = Color(0xFF10B981);
-  static const Color lightBackground = Color(0xFFFAFAFA);
-  static const Color lightCard = Color(0xFFFFFFFF);
+  static const Color lightPrimary = Color(0xFF1A1A1A); // Very dark gray for text
+  static const Color lightSecondary = Color(0xFF6B7280); // Muted gray for subtitles
+  static const Color lightAccent = Color(0xFF10B981); // Bright green for accents
+  static const Color lightBackground = Color(0xFFFFFFFF); // Pure white background
+  static const Color lightCard = Color(0xFFFFFFFF); // Cards blend with the background
   static const Color lightText = Color(0xFF111827);
   static const Color lightTextSecondary = Color(0xFF6B7280);
-  static const Color lightBorder = Color(0xFFE5E7EB);
+  static const Color lightBorder = Color(0xFFE5E7EB); // Lighter border for inputs
 
   // Dark theme colors inspired by the reference image
   static const Color darkPrimary = Color(0xFFFFFFFF); // White for primary text
@@ -38,72 +37,19 @@ class AppTheme {
     ),
 
     scaffoldBackgroundColor: lightBackground,
-    dividerColor: lightBorder,
+    dividerColor: Colors.transparent, 
 
     textTheme: TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 48,
-        fontWeight: FontWeight.w800,
-        color: lightText,
-        letterSpacing: -1.2,
-        height: 1.1,
-      ),
-      displayMedium: TextStyle(
-        fontSize: 36,
-        fontWeight: FontWeight.w700,
-        color: lightText,
-        letterSpacing: -0.8,
-        height: 1.2,
-      ),
-      displaySmall: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.w600,
-        color: lightText,
-        letterSpacing: -0.4,
-        height: 1.3,
-      ),
-      headlineLarge: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        color: lightText,
-        height: 1.3,
-      ),
-      headlineMedium: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: lightText,
-        height: 1.4,
-      ),
-      headlineSmall: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-        color: lightText,
-        height: 1.4,
-      ),
-      titleLarge: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: lightText,
-        height: 1.5,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        color: lightText,
-        height: 1.7,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        color: lightTextSecondary,
-        height: 1.6,
-      ),
-      bodySmall: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-        color: lightTextSecondary,
-        height: 1.5,
-      ),
+      displayLarge: TextStyle(fontSize: 48, fontWeight: FontWeight.w800, color: lightText, letterSpacing: -1.2, height: 1.1),
+      displayMedium: TextStyle(fontSize: 36, fontWeight: FontWeight.w700, color: lightText, letterSpacing: -0.8, height: 1.2),
+      displaySmall: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: lightText, letterSpacing: -0.4, height: 1.3),
+      headlineLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: lightText, height: 1.3),
+      headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: lightText, height: 1.4),
+      headlineSmall: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: lightText, height: 1.4),
+      titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: lightText, height: 1.5),
+      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: lightText, height: 1.7),
+      bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: lightTextSecondary, height: 1.6),
+      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: lightTextSecondary, height: 1.5),
     ),
 
     cardTheme: CardThemeData(
@@ -112,7 +58,7 @@ class AppTheme {
       shadowColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: lightBorder, width: 1),
+        side: BorderSide.none,
       ),
       margin: EdgeInsets.zero,
     ),
@@ -212,7 +158,6 @@ class AppTheme {
       titleTextStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: darkText),
     ),
 
-    // This style matches the high-contrast "Try for free" button in the image
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white, // White button background
