@@ -53,7 +53,6 @@ class _WritePostTabState extends State<WritePostTab> {
         SnackBar(content: Text('Post saved successfully!'), backgroundColor: Colors.green),
       );
 
-      // Clear form
       _titleController.clear();
       _contentController.clear();
       _excerptController.clear();
@@ -82,7 +81,6 @@ class _WritePostTabState extends State<WritePostTab> {
           Text('Write a New Post', style: Theme.of(context).textTheme.headlineSmall),
           SizedBox(height: 16),
 
-          // Title
           TextField(
             controller: _titleController,
             decoration: InputDecoration(
@@ -94,7 +92,6 @@ class _WritePostTabState extends State<WritePostTab> {
           ),
           SizedBox(height: 16),
 
-          // Category
           DropdownButtonFormField<PostCategory>(
             value: _selectedCategory,
             decoration: InputDecoration(
@@ -113,7 +110,6 @@ class _WritePostTabState extends State<WritePostTab> {
           ),
           SizedBox(height: 16),
 
-          // Excerpt
           TextField(
             controller: _excerptController,
             decoration: InputDecoration(
@@ -125,7 +121,6 @@ class _WritePostTabState extends State<WritePostTab> {
           ),
           SizedBox(height: 16),
 
-          // Content
           TextField(
             controller: _contentController,
             decoration: InputDecoration(
@@ -139,7 +134,6 @@ class _WritePostTabState extends State<WritePostTab> {
           ),
           SizedBox(height: 16),
 
-          // Publish toggle
           Row(
             children: [
               Checkbox(
@@ -159,7 +153,6 @@ class _WritePostTabState extends State<WritePostTab> {
           ),
           SizedBox(height: 24),
 
-          // Save button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(

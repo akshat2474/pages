@@ -1,5 +1,8 @@
+import 'package:blog/config/supabase_config.dart';
+import 'package:blog/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/daily_content_service.dart';
 import '../../models/daily_content_model.dart';
 import '../../models/post_model.dart';
@@ -80,50 +83,75 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'MindJourney',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w700,
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'MindJourney',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        Row(
+          children: [
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'About',
+                style: TextStyle(color: AppTheme.textSecondary),
+              ),
             ),
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'About',
-                  style: TextStyle(color: AppTheme.textSecondary),
-                ),
+            SizedBox(width: 24),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'Articles',
+                style: TextStyle(color: AppTheme.textSecondary),
               ),
-              SizedBox(width: 24),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'Articles',
-                  style: TextStyle(color: AppTheme.textSecondary),
-                ),
-              ),
-              SizedBox(width: 24),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AdminLoginScreen()),
+            ),
+            SizedBox(width: 24),
+            
+            StreamBuilder<AuthState>(
+              stream: SupabaseConfig.client.auth.onAuthStateChange,
+              builder: (context, snapshot) {
+                final session = snapshot.data?.session;
+                
+                if (session != null && AuthService.isAdmin) {
+                  return ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AdminDashboard()),
+                      );
+                    },
+                    icon: Icon(Icons.dashboard, size: 16),
+                    label: Text('Dashboard'),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    ),
                   );
-                },
-                icon: Icon(Icons.person_outline, color: AppTheme.textSecondary),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                } else {
+                  return IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AdminLoginScreen()),
+                      );
+                    },
+                    icon: Icon(Icons.person_outline, color: AppTheme.textSecondary),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildHeroSection() {
     return Container(
@@ -232,7 +260,6 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
           
           if (todaysContent!.wordOfDay != null) ...[
             Text(
-              // FIX: Manually transform the text to uppercase
               'Word of the Day'.toUpperCase(),
               style: TextStyle(
                 color: AppTheme.textSecondary,
@@ -260,7 +287,6 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
           
           if (todaysContent!.thoughtOfDay != null) ...[
             Text(
-              // FIX: Manually transform the text to uppercase
               'Thought of the Day'.toUpperCase(),
               style: TextStyle(
                 color: AppTheme.textSecondary,
@@ -354,7 +380,6 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      // FIX: Manually transform the text to uppercase
                       post.category.displayName.toUpperCase(),
                       style: TextStyle(
                         color: Colors.white,
@@ -484,7 +509,6 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 borderRadius: BorderRadius.circular(3),
               ),
               child: Text(
-                // FIX: Manually transform the text to uppercase
                 post.category.displayName.toUpperCase(),
                 style: TextStyle(
                   color: Colors.white,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Noter-inspired minimal color palette
   static const Color primary = Color(0xFF1A1A1A); // Deep black
   static const Color secondary = Color(0xFF6B7280); // Muted gray
   static const Color accent = Color(0xFF10B981); // Subtle green accent

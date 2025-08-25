@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'config/supabase_config.dart';
 import 'config/app_theme.dart';
-import 'screens/blog/noter_home_screen.dart';  // Use Noter home
+import 'screens/blog/noter_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +21,8 @@ class MyBlogApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MindJourney',
-      theme: AppTheme.noterTheme,  // Use Noter theme
-      home: NoterHomeScreen(),     // Use Noter layout
+      theme: AppTheme.noterTheme,
+      home: NoterHomeScreen(), // Always start with public home
       debugShowCheckedModeBanner: false,
     );
   }
@@ -31,7 +31,7 @@ class MyBlogApp extends StatelessWidget {
 class ErrorApp extends StatelessWidget {
   final String error;
   
-  const ErrorApp({Key? key, required this.error}) : super(key: key);
+  const ErrorApp({super.key, required this.error});
   
   @override
   Widget build(BuildContext context) {
@@ -52,16 +52,9 @@ class ErrorApp extends StatelessWidget {
               children: [
                 Icon(Icons.error_outline, size: 64, color: AppTheme.textSecondary),
                 SizedBox(height: 16),
-                Text(
-                  'Configuration Error',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
+                Text('Configuration Error', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 SizedBox(height: 8),
-                Text(
-                  error,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
+                Text(error, textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
               ],
             ),
           ),

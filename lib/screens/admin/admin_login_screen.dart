@@ -1,13 +1,12 @@
+import 'package:blog/screens/blog/noter_home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../models/post_model.dart';
-import '../blog/home_screen.dart';
 import '../../config/supabase_config.dart';
 import 'write_post_tab.dart';
 import 'manage_posts_tab.dart';
 import 'daily_content_tab.dart';
 
-// ADD THIS CLASS - This was missing!
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
 
@@ -21,29 +20,32 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   String? _errorMessage;
 
   Future<void> _signIn() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+  setState(() {
+    _isLoading = true;
+    _errorMessage = null;
+  });
 
-    try {
-      await AuthService.signInAdmin(_passwordController.text.trim());
-      
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => AdminDashboard()),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Login failed: ${e.toString()}';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+  try {
+    await AuthService.signInAdmin(_passwordController.text.trim());
+    
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => AdminDashboard()),
+        (route) => false,
+      );
     }
+  } catch (e) {
+    setState(() {
+      _errorMessage = 'Login failed: ${e.toString()}';
+    });
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
+
 
   @override
   void dispose() {
@@ -54,9 +56,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Admin Login'),
-      ),
+      appBar: AppBar(title: Text('Admin Login')),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -64,20 +64,20 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           children: [
             Icon(Icons.admin_panel_settings, size: 64, color: Colors.teal),
             SizedBox(height: 24),
-            
+
             Text(
               'Admin Access',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(height: 8),
-            
+
             Text(
               'Enter your password to access the admin panel',
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 24),
-            
+
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
@@ -89,7 +89,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               onSubmitted: (_) => _signIn(),
             ),
             SizedBox(height: 16),
-            
+
             if (_errorMessage != null) ...[
               Container(
                 padding: EdgeInsets.all(12),
@@ -105,7 +105,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               ),
               SizedBox(height: 16),
             ],
-            
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -125,7 +125,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 }
 
-// Your existing AdminDashboard class (keep this as is)
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 
@@ -133,7 +132,8 @@ class AdminDashboard extends StatefulWidget {
   _AdminDashboardState createState() => _AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProviderStateMixin {
+class _AdminDashboardState extends State<AdminDashboard>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<PostModel> _posts = [];
   bool _isLoading = false;
@@ -148,18 +148,22 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
   Future<void> _loadPosts() async {
     setState(() => _isLoading = true);
     try {
-      // Load all posts (published and unpublished) for admin
       final response = await SupabaseConfig.client
           .from('posts')
           .select()
           .order('created_at', ascending: false);
-      
+
       setState(() {
-        _posts = response.map<PostModel>((json) => PostModel.fromJson(json)).toList();
+        _posts = response
+            .map<PostModel>((json) => PostModel.fromJson(json))
+            .toList();
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading posts: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Error loading posts: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -167,28 +171,55 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: Text('Admin Dashboard'),
+        automaticallyImplyLeading: false, 
         actions: [
           IconButton(
             icon: Icon(Icons.home),
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+                MaterialPageRoute(builder: (context) => NoterHomeScreen()),
+                (route) => false,
               );
             },
           ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
-              await AuthService.signOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Logout'),
+                  content: Text('Are you sure you want to logout?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('Logout', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
               );
+
+              if (shouldLogout == true) {
+                await AuthService.signOut();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => NoterHomeScreen()),
+                  (route) => false,
+                );
+              }
             },
           ),
         ],
@@ -209,8 +240,10 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
           DailyContentTab(),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   @override
   void dispose() {

@@ -45,7 +45,6 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Category filter
         SizedBox(
           height: 60,
           child: ListView(
@@ -76,7 +75,6 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
           ),
         ),
 
-        // Posts list
         Expanded(
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
@@ -115,7 +113,6 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Category tag
                                     Container(
                                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
@@ -133,14 +130,12 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
                                     ),
                                     SizedBox(height: 8),
 
-                                    // Title
                                     Text(
                                       post.title,
                                       style: Theme.of(context).textTheme.headlineSmall,
                                     ),
                                     SizedBox(height: 8),
 
-                                    // Excerpt or content preview
                                     Text(
                                       post.excerpt ?? '${post.content.substring(0, post.content.length > 150 ? 150 : post.content.length)}...',
                                       style: Theme.of(context).textTheme.bodyMedium,
@@ -149,7 +144,6 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
                                     ),
                                     SizedBox(height: 12),
 
-                                    // Meta info
                                     Row(
                                       children: [
                                         Icon(Icons.calendar_today, size: 16, color: Colors.grey),

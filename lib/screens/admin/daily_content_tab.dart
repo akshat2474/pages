@@ -14,7 +14,6 @@ class _DailyContentTabState extends State<DailyContentTab> {
   final _definitionController = TextEditingController();
   final _thoughtController = TextEditingController();
   bool _isLoading = false;
-  DailyContentModel? _todaysContent;
 
   @override
   void initState() {
@@ -27,7 +26,6 @@ class _DailyContentTabState extends State<DailyContentTab> {
       final content = await DailyContentService.getTodaysContent();
       if (content != null) {
         setState(() {
-          _todaysContent = content;
           _wordController.text = content.wordOfDay ?? '';
           _definitionController.text = content.wordDefinition ?? '';
           _thoughtController.text = content.thoughtOfDay ?? '';

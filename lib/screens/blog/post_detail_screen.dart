@@ -71,7 +71,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
     await prefs.setStringList('liked_posts', likedPosts);
 
-    // Update like count in database
     if (_isLiked) {
       try {
         await PostService.incrementLikes(widget.post.id);
@@ -85,8 +84,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   if (_commentController.text.trim().isEmpty) return;
 
   try {
-    // Remove the anonymous sign-in requirement
-    // Just create the comment directly
     final comment = CommentModel(
       postId: widget.post.id,
       commenterName: _nameController.text.trim().isEmpty 
@@ -129,13 +126,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Post content
             Padding(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
@@ -152,7 +147,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   SizedBox(height: 16),
 
-                  // Title
+                  
                   Text(
                     widget.post.title,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -161,7 +156,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   SizedBox(height: 8),
 
-                  // Meta info
                   Row(
                     children: [
                       Icon(Icons.calendar_today, size: 16, color: Colors.grey),
@@ -182,7 +176,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   SizedBox(height: 24),
 
-                  // Content
                   MarkdownBody(
                     data: widget.post.content,
                     styleSheet: MarkdownStyleSheet(
@@ -198,7 +191,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
             Divider(thickness: 1),
 
-            // Comments section
             Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -210,7 +202,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   SizedBox(height: 16),
 
-                  // Add comment form
                   Card(
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -248,7 +239,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   SizedBox(height: 16),
 
-                  // Comments list
                   if (_isLoading)
                     Center(child: CircularProgressIndicator())
                   else if (_comments.isEmpty)

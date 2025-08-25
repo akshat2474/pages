@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/daily_content_service.dart';
 import '../../models/daily_content_model.dart';
-import '../admin/admin_login_screen.dart';  // Import AdminLoginScreen
+import '../admin/admin_login_screen.dart';  
 import 'blog_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -65,7 +65,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Daily content tab
           SingleChildScrollView(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -103,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ),
           
-          // Blog posts tab
           BlogHomeScreen(),
         ],
       ),
