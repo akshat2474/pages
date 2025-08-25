@@ -7,6 +7,7 @@ class CommentModel {
   final String commentText;
   final bool approved;
   final DateTime createdAt;
+  final String? parentId; // Add this line
 
   CommentModel({
     String? id,
@@ -15,6 +16,7 @@ class CommentModel {
     required this.commentText,
     this.approved = true,
     DateTime? createdAt,
+    this.parentId, // Add this line
   }) : id = id ?? const Uuid().v4(),
        createdAt = createdAt ?? DateTime.now();
 
@@ -26,6 +28,7 @@ class CommentModel {
       commentText: json['comment_text'],
       approved: json['approved'] ?? true,
       createdAt: DateTime.parse(json['created_at']),
+      parentId: json['parent_id'], // Add this line
     );
   }
 
@@ -36,6 +39,7 @@ class CommentModel {
       'commenter_name': commenterName,
       'comment_text': commentText,
       'approved': approved,
+      'parent_id': parentId, // Add this line
     };
   }
 }
