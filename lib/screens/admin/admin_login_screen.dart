@@ -1,3 +1,4 @@
+import 'package:blog/screens/admin/edit_about_tab.dart';
 import 'package:blog/screens/blog/noter_home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
@@ -20,32 +21,31 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   String? _errorMessage;
 
   Future<void> _signIn() async {
-  setState(() {
-    _isLoading = true;
-    _errorMessage = null;
-  });
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
 
-  try {
-    await AuthService.signInAdmin(_passwordController.text.trim());
-    
-    if (mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => AdminDashboard()),
-        (route) => false,
-      );
+    try {
+      await AuthService.signInAdmin(_passwordController.text.trim());
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => AdminDashboard()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Login failed: ${e.toString()}';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-  } catch (e) {
-    setState(() {
-      _errorMessage = 'Login failed: ${e.toString()}';
-    });
-  } finally {
-    setState(() {
-      _isLoading = false;
-    });
   }
-}
-
 
   @override
   void dispose() {
@@ -64,20 +64,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           children: [
             Icon(Icons.admin_panel_settings, size: 64, color: Colors.teal),
             SizedBox(height: 24),
-
             Text(
               'Admin Access',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(height: 8),
-
             Text(
               'Enter your password to access the admin panel',
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 24),
-
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
@@ -89,7 +86,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               onSubmitted: (_) => _signIn(),
             ),
             SizedBox(height: 16),
-
             if (_errorMessage != null) ...[
               Container(
                 padding: EdgeInsets.all(12),
@@ -105,7 +101,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               ),
               SizedBox(height: 16),
             ],
-
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -141,7 +136,7 @@ class _AdminDashboardState extends State<AdminDashboard>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _loadPosts();
   }
 
@@ -154,9 +149,8 @@ class _AdminDashboardState extends State<AdminDashboard>
           .order('created_at', ascending: false);
 
       setState(() {
-        _posts = response
-            .map<PostModel>((json) => PostModel.fromJson(json))
-            .toList();
+        _posts =
+            response.map<PostModel>((json) => PostModel.fromJson(json)).toList();
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -171,79 +165,82 @@ class _AdminDashboardState extends State<AdminDashboard>
   }
 
   @override
-Widget build(BuildContext context) {
-  return WillPopScope(
-    onWillPop: () async {
-      return false;
-    },
-    child: Scaffold(
-      appBar: AppBar(
-        title: Text('Admin Dashboard'),
-        automaticallyImplyLeading: false, 
-        actions: [
-          IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => NoterHomeScreen()),
-                (route) => false,
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              final shouldLogout = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Logout'),
-                  content: Text('Are you sure you want to logout?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text('Logout', style: TextStyle(color: Colors.red)),
-                    ),
-                  ],
-                ),
-              );
-
-              if (shouldLogout == true) {
-                await AuthService.signOut();
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Admin Dashboard'),
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => NoterHomeScreen()),
                   (route) => false,
                 );
-              }
-            },
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                final shouldLogout = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Logout'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child:
+                            Text('Logout', style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (shouldLogout == true) {
+                  await AuthService.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => NoterHomeScreen()),
+                    (route) => false,
+                  );
+                }
+              },
+            ),
+          ],
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(icon: Icon(Icons.edit), text: 'Write Post'),
+              Tab(icon: Icon(Icons.list), text: 'Manage Posts'),
+              Tab(icon: Icon(Icons.today), text: 'Daily Content'),
+              Tab(icon: Icon(Icons.person), text: 'About'),
+            ],
           ),
-        ],
-        bottom: TabBar(
+        ),
+        body: TabBarView(
           controller: _tabController,
-          tabs: [
-            Tab(icon: Icon(Icons.edit), text: 'Write Post'),
-            Tab(icon: Icon(Icons.list), text: 'Manage Posts'),
-            Tab(icon: Icon(Icons.today), text: 'Daily Content'),
+          children: [
+            WritePostTab(onPostCreated: _loadPosts),
+            ManagePostsTab(
+                posts: _posts, isLoading: _isLoading, onRefresh: _loadPosts),
+            DailyContentTab(),
+            EditAboutTab(),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          WritePostTab(onPostCreated: _loadPosts),
-          ManagePostsTab(posts: _posts, isLoading: _isLoading, onRefresh: _loadPosts),
-          DailyContentTab(),
-        ],
-      ),
-    ),
-  );
-}
-
+    );
+  }
 
   @override
   void dispose() {

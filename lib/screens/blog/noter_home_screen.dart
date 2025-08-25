@@ -1,3 +1,4 @@
+import 'package:blog/screens/about_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +27,10 @@ class GreenUnderline extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 65,
-      height: 5,
+      height: 6,
       decoration: BoxDecoration(
         color: const Color(0xFFD3EADD),
-        borderRadius: BorderRadius.circular(2),
+        borderRadius: BorderRadius.circular(4),
       ),
     );
   }
@@ -196,7 +197,10 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 ),
                 const SizedBox(width: 16),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => AboutPage()));
+                  },
                   child: Text(
                     'About',
                     style: TextStyle(
@@ -223,10 +227,10 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                     if (session != null && AuthService.isAdmin) {
                       return ElevatedButton.icon(
                         onPressed: () {
-                          // TODO: implement AdminDashboard
-                          // Navigator.of(
-                          //   context,
-                          // ).push(FadePageRoute(page: const AdminDashboard()));
+                          Navigator.of(
+                            context,
+                          ).push(
+                              FadePageRoute(page: const AdminDashboard()));
                         },
                         icon: const Icon(Icons.dashboard, size: 16),
                         label: const Text('Dashboard'),
