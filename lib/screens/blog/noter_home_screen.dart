@@ -15,6 +15,7 @@ import '../../utils/reading_time_util.dart';
 import '../../widgets/animated_widgets.dart';
 import '../../widgets/skeleton_widgets.dart';
 import '../../utils/page_transitions.dart';
+import '../../widgets/blinking_background.dart';
 
 class NoterHomeScreen extends StatefulWidget {
   const NoterHomeScreen({super.key});
@@ -54,44 +55,55 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: _buildHeader()),
-          
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                FadeInSlideUp(
-                  delay: Duration(milliseconds: 200),
-                  child: _buildHeroSection(),
-                ),
-                
-                SizedBox(height: 80),
-                if (isLoading)
-                  DailyContentSkeleton()
-                else if (todaysContent != null)
-                  FadeInSlideUp(
-                    delay: Duration(milliseconds: 400),
-                    child: _buildDailyContentSection(),
-                  ),
-                
-                SizedBox(height: 80),
-                FadeInSlideUp(
-                  delay: Duration(milliseconds: 600),
-                  child: _buildFeaturedSection(),
-                ),
-                
-                SizedBox(height: 80),
-                FadeInSlideUp(
-                  delay: Duration(milliseconds: 800),
-                  child: _buildRecentSection(),
-                ),
-                
-                SizedBox(height: 120),
-              ],
+      body: Stack(
+        children: [
+          // Conditionally add the background only in dark mode
+          if (isDarkMode)
+            const Positioned.fill(
+              child: BlinkingDotsBackground(),
             ),
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: _buildHeader()),
+              
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    FadeInSlideUp(
+                      delay: Duration(milliseconds: 200),
+                      child: _buildHeroSection(),
+                    ),
+                    
+                    SizedBox(height: 80),
+                    if (isLoading)
+                      DailyContentSkeleton()
+                    else if (todaysContent != null)
+                      FadeInSlideUp(
+                        delay: Duration(milliseconds: 400),
+                        child: _buildDailyContentSection(),
+                      ),
+                    
+                    SizedBox(height: 80),
+                    FadeInSlideUp(
+                      delay: Duration(milliseconds: 600),
+                      child: _buildFeaturedSection(),
+                    ),
+                    
+                    SizedBox(height: 80),
+                    FadeInSlideUp(
+                      delay: Duration(milliseconds: 800),
+                      child: _buildRecentSection(),
+                    ),
+                    
+                    SizedBox(height: 120),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
