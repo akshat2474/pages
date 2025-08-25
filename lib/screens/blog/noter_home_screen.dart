@@ -1,4 +1,5 @@
 import 'package:blog/screens/about_page.dart';
+import 'package:blog/screens/blog/blog_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -210,7 +211,14 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 ),
                 const SizedBox(width: 24),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(title: const Text('All Articles')),
+                        body: const BlogHomeScreen(),
+                      ),
+                    ));
+                  },
                   child: Text(
                     'Articles',
                     style: TextStyle(
@@ -338,15 +346,31 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
           Row(
             children: [
               PulsatingButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('All Articles')),
+                      body: const BlogHomeScreen(),
+                    ),
+                  ));
+                },
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                     Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('All Articles')),
+                      body: const BlogHomeScreen(),
+                    ),
+                  ));
+                  },
                   child: const Text('Read Latest Articles'),
                 ),
               ),
               const SizedBox(width: 16),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AboutPage()));
+                },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
