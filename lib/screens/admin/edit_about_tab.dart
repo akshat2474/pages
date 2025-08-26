@@ -8,10 +8,10 @@ class EditAboutTab extends StatefulWidget {
   const EditAboutTab({super.key});
 
   @override
-  _EditAboutTabState createState() => _EditAboutTabState();
+  EditAboutTabState createState() => EditAboutTabState();
 }
 
-class _EditAboutTabState extends State<EditAboutTab> {
+class EditAboutTabState extends State<EditAboutTab> {
   final _contentController = TextEditingController();
   bool _isLoading = false;
   AboutModel? _aboutModel;

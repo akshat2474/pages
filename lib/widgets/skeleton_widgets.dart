@@ -193,7 +193,7 @@ class DailyContentSkeleton extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5),
+              color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: .5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(

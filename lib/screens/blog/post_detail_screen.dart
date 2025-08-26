@@ -16,10 +16,10 @@ class PostDetailScreen extends StatefulWidget {
   const PostDetailScreen({super.key, required this.post});
 
   @override
-  _PostDetailScreenState createState() => _PostDetailScreenState();
+  PostDetailScreenState createState() => PostDetailScreenState();
 }
 
-class _PostDetailScreenState extends State<PostDetailScreen> {
+class PostDetailScreenState extends State<PostDetailScreen> {
   final _commentController = TextEditingController();
   final _nameController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -339,7 +339,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         Container(
           margin: const EdgeInsets.only(right: 8),
           decoration: BoxDecoration(
-            color: _isLiked ? Colors.red.withOpacity(0.1) : Colors.transparent,
+            color: _isLiked ? Colors.red.withValues(alpha:0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
           child: IconButton(
@@ -402,7 +402,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+            color: Colors.black.withValues(alpha:isDarkMode ? 0.3 : 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -414,10 +414,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: _getCategoryColor(widget.post.category).withOpacity(0.1),
+              color: _getCategoryColor(widget.post.category).withValues(alpha:0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: _getCategoryColor(widget.post.category).withOpacity(0.3),
+                color: _getCategoryColor(widget.post.category).withValues(alpha:0.3),
               ),
             ),
             child: Text(
@@ -487,7 +487,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   Icon(
                     Icons.favorite_outline,
                     size: 16,
-                    color: Colors.red.withOpacity(0.7),
+                    color: Colors.red.withValues(alpha:0.7),
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -504,7 +504,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   Icon(
                     Icons.comment_outlined,
                     size: 16,
-                    color: Colors.blue.withOpacity(0.7),
+                    color: Colors.blue.withValues(alpha:0.7),
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -533,7 +533,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+            color: Colors.black.withValues(alpha:isDarkMode ? 0.3 : 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -587,7 +587,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       ),
       blockquotePadding: const EdgeInsets.all(20),
       blockquoteDecoration: BoxDecoration(
-        color: _getCategoryColor(widget.post.category).withOpacity(0.1),
+        color: _getCategoryColor(widget.post.category).withValues(alpha:0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border(
           left: BorderSide(
@@ -633,13 +633,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               Container(
                 decoration: BoxDecoration(
                   color: _isLiked
-                      ? Colors.red.withOpacity(0.1)
+                      ? Colors.red.withValues(alpha:0.1)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _isLiked
-                        ? Colors.red.withOpacity(0.3)
-                        : Colors.grey.withOpacity(0.3),
+                        ? Colors.red.withValues(alpha:0.3)
+                        : Colors.grey.withValues(alpha:0.3),
                   ),
                 ),
                 child: Material(
@@ -680,7 +680,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                  border: Border.all(color: Colors.grey.withValues(alpha:0.3)),
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -714,7 +714,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
           Container(
             height: 1,
-            color: Theme.of(context).dividerColor.withOpacity(0.3),
+            color: Theme.of(context).dividerColor.withValues(alpha:0.3),
           ),
         ],
       ),
@@ -758,7 +758,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: DropdownButtonHideUnderline(
@@ -839,15 +839,15 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode
-              ? const Color(0xFF4B5563).withOpacity(0.5)
-              : const Color(0xFFE5E7EB).withOpacity(0.8),
+              ? const Color(0xFF4B5563).withValues(alpha:0.5)
+              : const Color(0xFFE5E7EB).withValues(alpha:0.8),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
             color: isDarkMode
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.black.withValues(alpha:0.3)
+                : Colors.black.withValues(alpha:0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -861,7 +861,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -890,7 +890,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha:0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border(
                   left: BorderSide(
@@ -941,8 +941,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               boxShadow: [
                 BoxShadow(
                   color: isDarkMode
-                      ? Colors.black.withOpacity(0.2)
-                      : Colors.black.withOpacity(0.02),
+                      ? Colors.black.withValues(alpha:0.2)
+                      : Colors.black.withValues(alpha:0.02),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -959,7 +959,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   decoration: BoxDecoration(
                     color: Theme.of(
                       context,
-                    ).colorScheme.primary.withOpacity(0.1),
+                    ).colorScheme.primary.withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -974,7 +974,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: isDarkMode
-                        ? const Color(0xFF6B7280).withOpacity(0.3)
+                        ? const Color(0xFF6B7280).withValues(alpha:0.3)
                         : const Color(0xFFD1D5DB),
                   ),
                 ),
@@ -982,7 +982,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: isDarkMode
-                        ? const Color(0xFF6B7280).withOpacity(0.3)
+                        ? const Color(0xFF6B7280).withValues(alpha:0.3)
                         : const Color(0xFFD1D5DB),
                   ),
                 ),
@@ -1012,8 +1012,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               boxShadow: [
                 BoxShadow(
                   color: isDarkMode
-                      ? Colors.black.withOpacity(0.2)
-                      : Colors.black.withOpacity(0.02),
+                      ? Colors.black.withValues(alpha:0.2)
+                      : Colors.black.withValues(alpha:0.02),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1030,7 +1030,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   decoration: BoxDecoration(
                     color: Theme.of(
                       context,
-                    ).colorScheme.primary.withOpacity(0.1),
+                    ).colorScheme.primary.withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -1045,7 +1045,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: isDarkMode
-                        ? const Color(0xFF6B7280).withOpacity(0.3)
+                        ? const Color(0xFF6B7280).withValues(alpha:0.3)
                         : const Color(0xFFD1D5DB),
                   ),
                 ),
@@ -1053,7 +1053,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: isDarkMode
-                        ? const Color(0xFF6B7280).withOpacity(0.3)
+                        ? const Color(0xFF6B7280).withValues(alpha:0.3)
                         : const Color(0xFFD1D5DB),
                   ),
                 ),
@@ -1089,15 +1089,15 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ? [const Color(0xFF4B5563), const Color(0xFF6B7280)]
                     : [
                         Theme.of(context).colorScheme.primary,
-                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                        Theme.of(context).colorScheme.primary.withValues(alpha:0.8),
                       ],
               ),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: isDarkMode
-                      ? Colors.black.withOpacity(0.3)
-                      : Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                      ? Colors.black.withValues(alpha:0.3)
+                      : Theme.of(context).colorScheme.primary.withValues(alpha:0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -1115,7 +1115,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       Icon(
                         Icons.send_rounded,
                         color: isDarkMode
-                            ? Colors.white.withOpacity(0.9)
+                            ? Colors.white.withValues(alpha:0.9)
                             : Colors.white,
                         size: 18,
                       ),
@@ -1124,7 +1124,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         _replyingTo != null ? 'Post Reply' : 'Post Comment',
                         style: TextStyle(
                           color: isDarkMode
-                              ? Colors.white.withOpacity(0.9)
+                              ? Colors.white.withValues(alpha:0.9)
                               : Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -1149,7 +1149,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           Icon(
             Icons.comment_outlined,
             size: 48,
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha:0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -1297,7 +1297,7 @@ class _CommentItemState extends State<_CommentItem> {
                     Container(
                       decoration: BoxDecoration(
                         color: widget.userVote == 'up'
-                            ? Colors.green.withOpacity(0.1)
+                            ? Colors.green.withValues(alpha:0.1)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -1329,7 +1329,7 @@ class _CommentItemState extends State<_CommentItem> {
                     Container(
                       decoration: BoxDecoration(
                         color: widget.userVote == 'down'
-                            ? Colors.red.withOpacity(0.1)
+                            ? Colors.red.withValues(alpha:0.1)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                       ),

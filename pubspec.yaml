@@ -20,6 +20,8 @@ dependencies:
   reading_time: ^2.0.0
   shimmer: ^3.0.0
   image_picker: ^1.0.4
+  markdown: ^7.3.0
+  postgrest: ^2.4.2
 
 dev_dependencies:
   flutter_test:

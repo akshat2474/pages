@@ -12,7 +12,7 @@ class Footer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
           child: Column(
             children: [
-              Divider(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+              Divider(color: Theme.of(context).dividerColor.withValues(alpha: .1)),
               const SizedBox(height: 32),
               if (isMobile)
                 Column(

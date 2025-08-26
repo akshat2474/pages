@@ -13,10 +13,10 @@ class FadeInSlideUp extends StatefulWidget {
   });
 
   @override
-  _FadeInSlideUpState createState() => _FadeInSlideUpState();
+  FadeInSlideUpState createState() => FadeInSlideUpState();
 }
 
-class _FadeInSlideUpState extends State<FadeInSlideUp>
+class FadeInSlideUpState extends State<FadeInSlideUp>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -78,10 +78,10 @@ class ScaleUpAnimation extends StatefulWidget {
   });
 
   @override
-  _ScaleUpAnimationState createState() => _ScaleUpAnimationState();
+  ScaleUpAnimationState createState() => ScaleUpAnimationState();
 }
 
-class _ScaleUpAnimationState extends State<ScaleUpAnimation>
+class ScaleUpAnimationState extends State<ScaleUpAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -158,10 +158,10 @@ class PulsatingButton extends StatefulWidget {
   });
 
   @override
-  _PulsatingButtonState createState() => _PulsatingButtonState();
+  PulsatingButtonState createState() => PulsatingButtonState();
 }
 
-class _PulsatingButtonState extends State<PulsatingButton>
+class PulsatingButtonState extends State<PulsatingButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -213,10 +213,10 @@ class ThemeToggleAnimation extends StatefulWidget {
   });
 
   @override
-  _ThemeToggleAnimationState createState() => _ThemeToggleAnimationState();
+  ThemeToggleAnimationState createState() => ThemeToggleAnimationState();
 }
 
-class _ThemeToggleAnimationState extends State<ThemeToggleAnimation>
+class ThemeToggleAnimationState extends State<ThemeToggleAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;

@@ -99,7 +99,7 @@ class _DotsPainter extends CustomPainter {
     final paint = Paint()..style = PaintingStyle.fill;
 
     for (var dot in dots) {
-      paint.color = Colors.white.withOpacity(dot.opacity);
+      paint.color = Colors.white.withValues(alpha:dot.opacity);
       canvas.drawCircle(dot.position, 1.0, paint);
     }
   }

@@ -6,10 +6,10 @@ class DailyContentTab extends StatefulWidget {
   const DailyContentTab({super.key});
 
   @override
-  _DailyContentTabState createState() => _DailyContentTabState();
+  DailyContentTabState createState() => DailyContentTabState();
 }
 
-class _DailyContentTabState extends State<DailyContentTab> {
+class DailyContentTabState extends State<DailyContentTab> {
   final _wordController = TextEditingController();
   final _definitionController = TextEditingController();
   final _thoughtController = TextEditingController();

@@ -11,10 +11,10 @@ class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
 
   @override
-  _AboutPageState createState() => _AboutPageState();
+  AboutPageState createState() => AboutPageState();
 }
 
-class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
+class AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
   bool _isLoading = true;
   AboutModel? _aboutModel;
   late AnimationController _lightModeController;
@@ -163,7 +163,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                                 BoxShadow(
                                   color: Theme.of(
                                     context,
-                                  ).primaryColor.withOpacity(0.3),
+                                  ).primaryColor.withValues(alpha: .3),
                                   blurRadius: 20,
                                   spreadRadius: 5,
                                 ),
@@ -223,7 +223,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                                 BoxShadow(
                                   color: Theme.of(
                                     context,
-                                  ).primaryColor.withOpacity(0.3),
+                                  ).primaryColor.withValues(alpha: .3),
                                   blurRadius: 15,
                                   spreadRadius: 3,
                                 ),
@@ -266,7 +266,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                   ? null
                   : [
                       Shadow(
-                        color: Theme.of(context).primaryColor.withOpacity(0.3),
+                        color: Theme.of(context).primaryColor.withValues(alpha:0.3),
                         blurRadius: 10,
                         offset: const Offset(2, 2),
                       ),
@@ -289,7 +289,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha:0.05),
                       blurRadius: 10 + (_pulseAnimation.value - 1) * 20,
                       spreadRadius: 2,
                     ),
@@ -353,15 +353,15 @@ class _LightModeBackgroundPainter extends CustomPainter {
       final proximity = 1 - (distance / 300).clamp(0.0, 1.0);
 
       final orbColor = Color.lerp(
-        Colors.white.withOpacity(0.5),
-        Colors.purple.withOpacity(0.3),
+        Colors.white.withValues(alpha:0.5),
+        Colors.purple.withValues(alpha:0.3),
         (i / 5.0) + proximity * 0.5,
       )!;
 
       final orbPaint = Paint()
         ..shader = RadialGradient(
           colors: [
-            orbColor.withOpacity(0.1 + proximity * 0.3),
+            orbColor.withValues(alpha:0.1 + proximity * 0.3),
             Colors.transparent,
           ],
         ).createShader(Rect.fromCircle(center: Offset(x, y), radius: radius));

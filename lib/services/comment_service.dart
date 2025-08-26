@@ -1,3 +1,7 @@
+import 'package:postgrest/src/postgrest_builder.dart';
+
+import 'package:postgrest/src/types.dart';
+
 import '../config/supabase_config.dart';
 import '../models/comment_model.dart';
 
@@ -17,7 +21,7 @@ class CommentService {
           .eq('post_id', postId)
           .eq('approved', true);
 
-      final sortedQuery;
+      final PostgrestTransformBuilder<PostgrestList> sortedQuery;
       if (sortBy == CommentSortType.newest) {
         sortedQuery = queryBuilder.order('created_at', ascending: false);
       } else {

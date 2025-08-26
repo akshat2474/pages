@@ -9,10 +9,10 @@ class WritePostTab extends StatefulWidget {
   const WritePostTab({super.key, required this.onPostCreated, this.postToEdit});
 
   @override
-  _WritePostTabState createState() => _WritePostTabState();
+  WritePostTabState createState() => WritePostTabState();
 }
 
-class _WritePostTabState extends State<WritePostTab> {
+class WritePostTabState extends State<WritePostTab> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _excerptController = TextEditingController();

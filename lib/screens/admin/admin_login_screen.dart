@@ -13,10 +13,10 @@ class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
 
   @override
-  _AdminLoginScreenState createState() => _AdminLoginScreenState();
+  AdminLoginScreenState createState() => AdminLoginScreenState();
 }
 
-class _AdminLoginScreenState extends State<AdminLoginScreen> {
+class AdminLoginScreenState extends State<AdminLoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
@@ -98,7 +98,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
+                      color: Colors.red.withValues(alpha: .1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -134,10 +134,10 @@ class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 
   @override
-  _AdminDashboardState createState() => _AdminDashboardState();
+  AdminDashboardState createState() => AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard>
+class AdminDashboardState extends State<AdminDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<PostModel> _posts = [];

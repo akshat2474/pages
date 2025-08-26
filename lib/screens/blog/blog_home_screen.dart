@@ -10,10 +10,10 @@ class BlogHomeScreen extends StatefulWidget {
   const BlogHomeScreen({super.key});
 
   @override
-  _BlogHomeScreenState createState() => _BlogHomeScreenState();
+  BlogHomeScreenState createState() => BlogHomeScreenState();
 }
 
-class _BlogHomeScreenState extends State<BlogHomeScreen> {
+class BlogHomeScreenState extends State<BlogHomeScreen> {
   List<PostModel> _posts = [];
   bool _isLoading = true;
   PostCategory? _selectedCategory;
@@ -137,7 +137,7 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.teal.withOpacity(0.1),
+                                        color: Colors.teal.withValues(alpha: .1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
