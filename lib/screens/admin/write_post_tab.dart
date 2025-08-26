@@ -4,8 +4,13 @@ import '../../services/post_service.dart';
 
 class WritePostTab extends StatefulWidget {
   final VoidCallback onPostCreated;
+  final PostModel? postToEdit;
 
-  const WritePostTab({super.key, required this.onPostCreated});
+  const WritePostTab({
+    super.key,
+    required this.onPostCreated,
+    this.postToEdit,
+  });
 
   @override
   _WritePostTabState createState() => _WritePostTabState();
@@ -18,6 +23,19 @@ class _WritePostTabState extends State<WritePostTab> {
   PostCategory _selectedCategory = PostCategory.mentalHealth;
   bool _isPublished = false;
   bool _isLoading = false;
+  bool get _isEditing => widget.postToEdit != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditing) {
+      _titleController.text = widget.postToEdit!.title;
+      _contentController.text = widget.postToEdit!.content;
+      _excerptController.text = widget.postToEdit!.excerpt ?? '';
+      _selectedCategory = widget.postToEdit!.category;
+      _isPublished = widget.postToEdit!.published;
+    }
+  }
 
   String _generateSlug(String title) {
     return title
@@ -28,9 +46,12 @@ class _WritePostTabState extends State<WritePostTab> {
   }
 
   Future<void> _savePost() async {
-    if (_titleController.text.trim().isEmpty || _contentController.text.trim().isEmpty) {
+    if (_titleController.text.trim().isEmpty ||
+        _contentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Title and content are required'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Title and content are required'),
+            backgroundColor: Colors.red),
       );
       return;
     }
@@ -38,36 +59,63 @@ class _WritePostTabState extends State<WritePostTab> {
     setState(() => _isLoading = true);
 
     try {
-      final post = PostModel(
-        title: _titleController.text.trim(),
-        content: _contentController.text.trim(),
-        excerpt: _excerptController.text.trim().isEmpty ? null : _excerptController.text.trim(),
-        category: _selectedCategory,
-        slug: _generateSlug(_titleController.text.trim()),
-        published: _isPublished,
-      );
-
-      await PostService.createPost(post);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Post saved successfully!'), backgroundColor: Colors.green),
-      );
-
-      _titleController.clear();
-      _contentController.clear();
-      _excerptController.clear();
-      setState(() {
-        _isPublished = false;
-        _selectedCategory = PostCategory.mentalHealth;
-      });
+      if (_isEditing) {
+        final updatedPost = widget.postToEdit!.copyWith(
+          title: _titleController.text.trim(),
+          content: _contentController.text.trim(),
+          excerpt: _excerptController.text.trim().isEmpty
+              ? null
+              : _excerptController.text.trim(),
+          category: _selectedCategory,
+          slug: _generateSlug(_titleController.text.trim()),
+          published: _isPublished,
+        );
+        await PostService.updatePost(updatedPost);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Post updated successfully!'),
+              backgroundColor: Colors.green),
+        );
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      } else {
+        final post = PostModel(
+          title: _titleController.text.trim(),
+          content: _contentController.text.trim(),
+          excerpt: _excerptController.text.trim().isEmpty
+              ? null
+              : _excerptController.text.trim(),
+          category: _selectedCategory,
+          slug: _generateSlug(_titleController.text.trim()),
+          published: _isPublished,
+        );
+        await PostService.createPost(post);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Post saved successfully!'),
+              backgroundColor: Colors.green),
+        );
+        _titleController.clear();
+        _contentController.clear();
+        _excerptController.clear();
+        setState(() {
+          _isPublished = false;
+          _selectedCategory = PostCategory.mentalHealth;
+        });
+      }
 
       widget.onPostCreated();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving post: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Error saving post: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -78,9 +126,9 @@ class _WritePostTabState extends State<WritePostTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Write a New Post', style: Theme.of(context).textTheme.headlineSmall),
+          Text(_isEditing ? 'Edit Post' : 'Write a New Post',
+              style: Theme.of(context).textTheme.headlineSmall),
           SizedBox(height: 16),
-
           TextField(
             controller: _titleController,
             decoration: InputDecoration(
@@ -91,7 +139,6 @@ class _WritePostTabState extends State<WritePostTab> {
             maxLines: 2,
           ),
           SizedBox(height: 16),
-
           DropdownButtonFormField<PostCategory>(
             value: _selectedCategory,
             decoration: InputDecoration(
@@ -109,7 +156,6 @@ class _WritePostTabState extends State<WritePostTab> {
             },
           ),
           SizedBox(height: 16),
-
           TextField(
             controller: _excerptController,
             decoration: InputDecoration(
@@ -120,7 +166,6 @@ class _WritePostTabState extends State<WritePostTab> {
             maxLines: 3,
           ),
           SizedBox(height: 16),
-
           TextField(
             controller: _contentController,
             decoration: InputDecoration(
@@ -133,7 +178,6 @@ class _WritePostTabState extends State<WritePostTab> {
             minLines: 10,
           ),
           SizedBox(height: 16),
-
           Row(
             children: [
               Checkbox(
@@ -144,15 +188,14 @@ class _WritePostTabState extends State<WritePostTab> {
               ),
               Text('Publish immediately'),
               Spacer(),
-              Text(_isPublished ? 'Published' : 'Draft', 
-                   style: TextStyle(
-                     color: _isPublished ? Colors.green : Colors.orange,
-                     fontWeight: FontWeight.bold,
-                   )),
+              Text(_isPublished ? 'Published' : 'Draft',
+                  style: TextStyle(
+                    color: _isPublished ? Colors.green : Colors.orange,
+                    fontWeight: FontWeight.bold,
+                  )),
             ],
           ),
           SizedBox(height: 24),
-
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -161,9 +204,9 @@ class _WritePostTabState extends State<WritePostTab> {
                 padding: EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal,
               ),
-              child: _isLoading 
+              child: _isLoading
                   ? CircularProgressIndicator(color: Colors.white)
-                  : Text('Save Post'),
+                  : Text(_isEditing ? 'Update Post' : 'Save Post'),
             ),
           ),
         ],

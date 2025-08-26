@@ -1,3 +1,4 @@
+import 'package:blog/screens/admin/write_post_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/post_model.dart';
@@ -8,17 +9,19 @@ class ManagePostsTab extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onRefresh;
 
-  const ManagePostsTab({super.key, 
+  const ManagePostsTab({
+    super.key,
     required this.posts,
     required this.isLoading,
     required this.onRefresh,
   });
 
-  Future<void> _togglePublishStatus(BuildContext context, PostModel post) async {
+  Future<void> _togglePublishStatus(
+      BuildContext context, PostModel post) async {
     try {
       final updatedPost = post.copyWith(published: !post.published);
       await PostService.updatePost(updatedPost);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(post.published ? 'Post unpublished' : 'Post published'),
@@ -56,12 +59,15 @@ class ManagePostsTab extends StatelessWidget {
       try {
         await PostService.deletePost(post.id);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Post deleted'), backgroundColor: Colors.green),
+          SnackBar(
+              content: Text('Post deleted'), backgroundColor: Colors.green),
         );
         onRefresh();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error deleting post: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Error deleting post: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -80,7 +86,8 @@ class ManagePostsTab extends StatelessWidget {
           children: [
             Icon(Icons.article_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text('No posts yet', style: Theme.of(context).textTheme.headlineSmall),
+            Text('No posts yet',
+                style: Theme.of(context).textTheme.headlineSmall),
             Text('Create your first blog post using the Write Post tab'),
           ],
         ),
@@ -141,10 +148,22 @@ class ManagePostsTab extends StatelessWidget {
                   PopupMenuButton(
                     itemBuilder: (context) => [
                       PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit_outlined),
+                            SizedBox(width: 8),
+                            Text('Edit'),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
                         value: 'toggle',
                         child: Row(
                           children: [
-                            Icon(post.published ? Icons.visibility_off : Icons.visibility),
+                            Icon(post.published
+                                ? Icons.visibility_off
+                                : Icons.visibility),
                             SizedBox(width: 8),
                             Text(post.published ? 'Unpublish' : 'Publish'),
                           ],
@@ -166,6 +185,16 @@ class ManagePostsTab extends StatelessWidget {
                         _togglePublishStatus(context, post);
                       } else if (value == 'delete') {
                         _deletePost(context, post);
+                      } else if (value == 'edit') {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Scaffold(
+                            appBar: AppBar(title: Text('Edit Post')),
+                            body: WritePostTab(
+                              onPostCreated: onRefresh,
+                              postToEdit: post,
+                            ),
+                          ),
+                        ));
                       }
                     },
                   ),
