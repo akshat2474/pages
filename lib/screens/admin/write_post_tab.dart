@@ -128,83 +128,108 @@ class _WritePostTabState extends State<WritePostTab> {
         children: [
           Text(_isEditing ? 'Edit Post' : 'Write a New Post',
               style: Theme.of(context).textTheme.headlineSmall),
-          SizedBox(height: 16),
-          TextField(
-            controller: _titleController,
-            decoration: InputDecoration(
-              labelText: 'Post Title *',
-              border: OutlineInputBorder(),
-              hintText: 'Enter your blog post title',
-            ),
-            maxLines: 2,
-          ),
-          SizedBox(height: 16),
-          DropdownButtonFormField<PostCategory>(
-            value: _selectedCategory,
-            decoration: InputDecoration(
-              labelText: 'Category',
-              border: OutlineInputBorder(),
-            ),
-            items: PostCategory.values.map((category) {
-              return DropdownMenuItem(
-                value: category,
-                child: Text(category.displayName),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() => _selectedCategory = value!);
-            },
-          ),
-          SizedBox(height: 16),
-          TextField(
-            controller: _excerptController,
-            decoration: InputDecoration(
-              labelText: 'Excerpt (Optional)',
-              border: OutlineInputBorder(),
-              hintText: 'Brief summary of your post',
-            ),
-            maxLines: 3,
-          ),
-          SizedBox(height: 16),
-          TextField(
-            controller: _contentController,
-            decoration: InputDecoration(
-              labelText: 'Post Content *',
-              border: OutlineInputBorder(),
-              hintText: 'Write your blog post content here...',
-              alignLabelWithHint: true,
-            ),
-            maxLines: 15,
-            minLines: 10,
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Checkbox(
-                value: _isPublished,
-                onChanged: (value) {
-                  setState(() => _isPublished = value!);
-                },
+          SizedBox(height: 24),
+          Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _titleController,
+                    decoration: InputDecoration(
+                      labelText: 'Post Title *',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.title),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  DropdownButtonFormField<PostCategory>(
+                    value: _selectedCategory,
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.category),
+                    ),
+                    items: PostCategory.values.map((category) {
+                      return DropdownMenuItem(
+                        value: category,
+                        child: Text(category.displayName),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() => _selectedCategory = value!);
+                    },
+                  ),
+                ],
               ),
-              Text('Publish immediately'),
-              Spacer(),
-              Text(_isPublished ? 'Published' : 'Draft',
-                  style: TextStyle(
-                    color: _isPublished ? Colors.green : Colors.orange,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ],
+            ),
+          ),
+          SizedBox(height: 16),
+          Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _excerptController,
+                    decoration: InputDecoration(
+                      labelText: 'Excerpt (Optional)',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.short_text),
+                    ),
+                    maxLines: 3,
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: _contentController,
+                    decoration: InputDecoration(
+                      labelText: 'Post Content *',
+                      border: OutlineInputBorder(),
+                      alignLabelWithHint: true,
+                    ),
+                    maxLines: 15,
+                    minLines: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                children: [
+                  Icon(Icons.publish, color: Theme.of(context).textTheme.bodySmall?.color),
+                  SizedBox(width: 8),
+                  Text('Publish'),
+                  Spacer(),
+                  Switch(
+                    value: _isPublished,
+                    onChanged: (value) {
+                      setState(() => _isPublished = value);
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
           SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
               onPressed: _isLoading ? null : _savePost,
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal,
               ),
-              child: _isLoading
+              icon: _isLoading
+                  ? Container()
+                  : Icon(_isEditing ? Icons.update : Icons.save),
+              label: _isLoading
                   ? CircularProgressIndicator(color: Colors.white)
                   : Text(_isEditing ? 'Update Post' : 'Save Post'),
             ),
