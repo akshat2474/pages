@@ -1,11 +1,10 @@
 #!/bin/bash
-# Flutter Netlify Build Script
 
 # Download and install Flutter SDK
 FLUTTER_VERSION=stable
 curl -Lo flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz
 
-# Extract Flutter
+# Extract Flutter SDK
 tar xf flutter.tar.xz
 
 # Add Flutter to PATH
@@ -14,7 +13,7 @@ export PATH="$PWD/flutter/bin:$PATH"
 # Enable web support
 flutter config --enable-web
 
-# Verify installation
+# Verify Flutter installation
 flutter --version
 
 # Get dependencies
