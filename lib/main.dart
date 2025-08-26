@@ -7,7 +7,7 @@ import 'screens/blog/noter_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     await SupabaseConfig.initialize();
     runApp(
@@ -32,7 +32,9 @@ class MyBlogApp extends StatelessWidget {
           title: 'MindJourney',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          themeMode: themeProvider.isDarkMode
+              ? ThemeMode.dark
+              : ThemeMode.light,
           home: NoterHomeScreen(),
           debugShowCheckedModeBanner: false,
         );
@@ -43,9 +45,9 @@ class MyBlogApp extends StatelessWidget {
 
 class ErrorApp extends StatelessWidget {
   final String error;
-  
+
   const ErrorApp({super.key, required this.error});
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

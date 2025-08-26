@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/daily_content_service.dart';
 import '../../models/daily_content_model.dart';
-import '../admin/admin_login_screen.dart';  
+import '../admin/admin_login_screen.dart';
 import 'blog_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,7 +11,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   DailyContentModel? todaysContent;
   bool isLoading = true;
@@ -76,9 +77,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   _buildDailyContentCard()
                 else
                   _buildEmptyDailyContent(),
-                
+
                 SizedBox(height: 20),
-                
+
                 Card(
                   child: Padding(
                     padding: EdgeInsets.all(16),
@@ -101,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ],
             ),
           ),
-          
+
           BlogHomeScreen(),
         ],
       ),
@@ -119,9 +120,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             if (todaysContent!.wordOfDay != null) ...[
               Text(
                 'Word of the Day',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.teal,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineSmall?.copyWith(color: Colors.teal),
               ),
               SizedBox(height: 8),
               Text(
@@ -139,13 +140,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ],
               SizedBox(height: 16),
             ],
-            
+
             if (todaysContent!.thoughtOfDay != null) ...[
               Text(
                 'Thought of the Day',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.teal,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineSmall?.copyWith(color: Colors.teal),
               ),
               SizedBox(height: 8),
               Container(
@@ -156,9 +157,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
                 child: Text(
                   '"${todaysContent!.thoughtOfDay!}"',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontStyle: FontStyle.italic,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic),
                 ),
               ),
             ],

@@ -199,8 +199,9 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 const SizedBox(width: 16),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => AboutPage()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => AboutPage()),
+                    );
                   },
                   child: Text(
                     'About',
@@ -212,12 +213,14 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 const SizedBox(width: 24),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        appBar: AppBar(title: const Text('All Articles')),
-                        body: const BlogHomeScreen(),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Scaffold(
+                          appBar: AppBar(title: const Text('All Articles')),
+                          body: const BlogHomeScreen(),
+                        ),
                       ),
-                    ));
+                    );
                   },
                   child: Text(
                     'Articles',
@@ -237,8 +240,7 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                         onPressed: () {
                           Navigator.of(
                             context,
-                          ).push(
-                              FadePageRoute(page: const AdminDashboard()));
+                          ).push(FadePageRoute(page: const AdminDashboard()));
                         },
                         icon: const Icon(Icons.dashboard, size: 16),
                         label: const Text('Dashboard'),
@@ -290,10 +292,8 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
               color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .secondary
-                      .withOpacity(0.2)),
+                color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+              ),
             ),
             child: Text(
               'Mental Health & Wellbeing',
@@ -317,29 +317,20 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                   ],
                 ),
               ),
-              Positioned(
-                bottom: 5,
-                left: 0,
-                child: const GreenUnderline(),
-              ),
+              Positioned(bottom: 5, left: 0, child: const GreenUnderline()),
               if (isDesktop)
-                Positioned(
-                  top: -5,
-                  right: 110,
-                  child: const PinkSquiggle(),
-                ),
+                Positioned(top: -5, right: 110, child: const PinkSquiggle()),
             ],
           ),
           const SizedBox(height: 24),
           SizedBox(
-            width:
-                isDesktop ? MediaQuery.of(context).size.width * 0.6 : null,
+            width: isDesktop ? MediaQuery.of(context).size.width * 0.6 : null,
             child: Text(
               'Discover insights, tips, and inspiration for your mental wellbeing. A safe space for growth, healing, and self-discovery.',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
-                    fontSize: 18,
-                  ),
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+                fontSize: 18,
+              ),
             ),
           ),
           const SizedBox(height: 40),
@@ -347,21 +338,25 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
             children: [
               PulsatingButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(title: const Text('All Articles')),
-                      body: const BlogHomeScreen(),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(title: const Text('All Articles')),
+                        body: const BlogHomeScreen(),
+                      ),
                     ),
-                  ));
+                  );
                 },
                 child: ElevatedButton(
                   onPressed: () {
-                     Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(title: const Text('All Articles')),
-                      body: const BlogHomeScreen(),
-                    ),
-                  ));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Scaffold(
+                          appBar: AppBar(title: const Text('All Articles')),
+                          body: const BlogHomeScreen(),
+                        ),
+                      ),
+                    );
                   },
                   child: const Text('Read Latest Articles'),
                 ),
@@ -369,7 +364,9 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
               const SizedBox(width: 16),
               TextButton(
                 onPressed: () {
-                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AboutPage()));
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => AboutPage()));
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -377,12 +374,15 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                     Text(
                       'About This Blog',
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium?.color),
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(Icons.arrow_forward,
-                        size: 16,
-                        color: Theme.of(context).textTheme.bodyMedium?.color),
+                    Icon(
+                      Icons.arrow_forward,
+                      size: 16,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
                   ],
                 ),
               ),
@@ -419,11 +419,8 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                   width: 48,
                   height: 48,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    width: 48,
-                    height: 48,
-                    color: Colors.grey[300],
-                  ),
+                  placeholder: (context, url) =>
+                      Container(width: 48, height: 48, color: Colors.grey[300]),
                   errorWidget: (context, url, error) => Container(
                     width: 48,
                     height: 48,
@@ -431,8 +428,11 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                       color: Theme.of(context).colorScheme.secondary,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.wb_sunny,
-                        color: Colors.white, size: 24),
+                    child: const Icon(
+                      Icons.wb_sunny,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
                 ),
               ),
@@ -441,9 +441,9 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 child: Text(
                   'Today\'s Daily Inspiration',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: const Color(0xFF63C4B6),
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: const Color(0xFF63C4B6),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -451,12 +451,9 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
           const SizedBox(height: 24),
           if (todaysContent!.wordOfDay != null) ...[
             _buildWordSection(),
-            if (todaysContent!.thoughtOfDay != null)
-              const SizedBox(height: 24),
+            if (todaysContent!.thoughtOfDay != null) const SizedBox(height: 24),
           ],
-          if (todaysContent!.thoughtOfDay != null) ...[
-            _buildThoughtSection(),
-          ],
+          if (todaysContent!.thoughtOfDay != null) ...[_buildThoughtSection()],
         ],
       ),
     );
@@ -479,9 +476,9 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
             Text(
               'Word of the Day',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: const Color(0xFF63C4B6),
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: const Color(0xFF63C4B6),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -503,24 +500,22 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
               Text(
                 todaysContent!.wordOfDay!,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode
-                          ? Colors.white
-                          : Theme.of(context).textTheme.bodyLarge?.color,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode
+                      ? Colors.white
+                      : Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
               if (todaysContent!.wordDefinition != null) ...[
                 const SizedBox(height: 8),
                 Text(
                   todaysContent!.wordDefinition!,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(
-                        color: isDarkMode
-                            ? Colors.white70
-                            : Theme.of(context).textTheme.bodyLarge?.color,
-                        height: 1.6,
-                      ),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: isDarkMode
+                        ? Colors.white70
+                        : Theme.of(context).textTheme.bodyLarge?.color,
+                    height: 1.6,
+                  ),
                 ),
               ],
             ],
@@ -538,18 +533,14 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
       children: [
         Row(
           children: [
-            Icon(
-              Icons.format_quote,
-              color: const Color(0xFF63C4B6),
-              size: 20,
-            ),
+            Icon(Icons.format_quote, color: const Color(0xFF63C4B6), size: 20),
             const SizedBox(width: 8),
             Text(
               'Thought of the Day',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: const Color(0xFF63C4B6),
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: const Color(0xFF63C4B6),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -578,13 +569,13 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                 child: Text(
                   todaysContent!.thoughtOfDay!,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: isDarkMode
-                            ? Colors.white70
-                            : Theme.of(context).textTheme.bodyLarge?.color,
-                        height: 1.5,
-                        fontSize: 16,
-                      ),
+                    fontStyle: FontStyle.italic,
+                    color: isDarkMode
+                        ? Colors.white70
+                        : Theme.of(context).textTheme.bodyLarge?.color,
+                    height: 1.5,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
@@ -655,9 +646,10 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.grey.shade200
-                  : Theme.of(context).dividerColor),
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.grey.shade200
+                : Theme.of(context).dividerColor,
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -688,14 +680,12 @@ class _NoterHomeScreenState extends State<NoterHomeScreen> {
                   Text(
                     post.title,
                     style: isLarge
-                        ? Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)
-                        : Theme.of(context)
-                            .textTheme
-                            .headlineLarge
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                        ? Theme.of(context).textTheme.displayMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          )
+                        : Theme.of(context).textTheme.headlineLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                   ),
                   const SizedBox(height: 12),
                   Text(

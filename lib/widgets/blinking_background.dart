@@ -17,14 +17,12 @@ class _BlinkingDotsBackgroundState extends State<BlinkingDotsBackground>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addListener(() {
-        _updateDots();
-      });
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 5))
+          ..addListener(() {
+            _updateDots();
+          });
 
-    // Initialize dots once the widget is laid out
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _initializeDots(context.size ?? const Size(400, 800));
@@ -36,19 +34,20 @@ class _BlinkingDotsBackgroundState extends State<BlinkingDotsBackground>
   void _initializeDots(Size size) {
     if (!mounted || size.isEmpty) return;
     _dots.clear();
-    // Increased spacing to make the grid less dense
-    const double spacing = 50.0; 
+    const double spacing = 50.0;
 
     final cols = (size.width / spacing).ceil();
     final rows = (size.height / spacing).ceil();
 
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
-        _dots.add(_Dot(
-          position: Offset(x * spacing, y * spacing),
-          opacity: _random.nextDouble() * 0.5, // Start with low opacity
-          targetOpacity: _random.nextDouble() * 0.7,
-        ));
+        _dots.add(
+          _Dot(
+            position: Offset(x * spacing, y * spacing),
+            opacity: _random.nextDouble() * 0.5,
+            targetOpacity: _random.nextDouble() * 0.7,
+          ),
+        );
       }
     }
     setState(() {});
@@ -58,10 +57,8 @@ class _BlinkingDotsBackgroundState extends State<BlinkingDotsBackground>
     if (!mounted) return;
     setState(() {
       for (var dot in _dots) {
-        // Smoothly transition to the target opacity
         dot.opacity += (dot.targetOpacity - dot.opacity) * 0.05;
 
-        // Randomly assign a new target opacity to some dots to make them blink
         if (_random.nextDouble() < 0.01) {
           dot.targetOpacity = _random.nextDouble() * 0.7;
         }
@@ -102,7 +99,6 @@ class _DotsPainter extends CustomPainter {
     final paint = Paint()..style = PaintingStyle.fill;
 
     for (var dot in dots) {
-      // Use a very subtle white for the dots
       paint.color = Colors.white.withOpacity(dot.opacity);
       canvas.drawCircle(dot.position, 1.0, paint);
     }

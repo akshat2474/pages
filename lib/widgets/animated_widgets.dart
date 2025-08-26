@@ -25,26 +25,17 @@ class _FadeInSlideUpState extends State<FadeInSlideUp>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     Future.delayed(widget.delay, () {
       if (mounted) _controller.forward();
@@ -98,18 +89,12 @@ class _ScaleUpAnimationState extends State<ScaleUpAnimation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     Future.delayed(widget.delay, () {
       if (mounted) _controller.forward();
@@ -152,7 +137,7 @@ class StaggeredListAnimation extends StatelessWidget {
       children: children.asMap().entries.map((entry) {
         final index = entry.key;
         final child = entry.value;
-        
+
         return FadeInSlideUp(
           delay: Duration(milliseconds: index * delay.inMilliseconds),
           child: child,
@@ -192,10 +177,7 @@ class _PulsatingButtonState extends State<PulsatingButton>
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -213,10 +195,7 @@ class _PulsatingButtonState extends State<PulsatingButton>
       builder: (context, child) {
         return Transform.scale(
           scale: _scaleAnimation.value,
-          child: GestureDetector(
-            onTap: widget.onPressed,
-            child: widget.child,
-          ),
+          child: GestureDetector(onTap: widget.onPressed, child: widget.child),
         );
       },
     );
@@ -253,10 +232,7 @@ class _ThemeToggleAnimationState extends State<ThemeToggleAnimation>
     _rotationAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -280,7 +256,7 @@ class _ThemeToggleAnimationState extends State<ThemeToggleAnimation>
         animation: _rotationAnimation,
         builder: (context, child) {
           return Transform.rotate(
-            angle: _rotationAnimation.value * 3.14159, // 180 degrees
+            angle: _rotationAnimation.value * 3.14159,
             child: Icon(
               widget.isDarkMode ? Icons.light_mode : Icons.dark_mode,
               key: ValueKey(widget.isDarkMode),

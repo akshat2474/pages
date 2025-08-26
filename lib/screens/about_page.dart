@@ -91,33 +91,31 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
         },
         child: Stack(
           children: [
-            // Background animations
             if (isDarkMode)
               const Positioned.fill(child: BlinkingDotsBackground())
             else
               _buildLightModeBackground(),
 
-            // Content
             _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _aboutModel == null
-                    ? const Center(child: Text('No content available.'))
-                    : Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 900),
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.all(24.0),
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                bool isDesktop = constraints.maxWidth > 600;
-                                return isDesktop
-                                    ? _buildDesktopLayout(isDarkMode)
-                                    : _buildMobileLayout(isDarkMode);
-                              },
-                            ),
-                          ),
+                ? const Center(child: Text('No content available.'))
+                : Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 900),
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(24.0),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            bool isDesktop = constraints.maxWidth > 600;
+                            return isDesktop
+                                ? _buildDesktopLayout(isDarkMode)
+                                : _buildMobileLayout(isDarkMode);
+                          },
                         ),
                       ),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -299,7 +297,6 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                 ),
           child: MarkdownBody(
             data: _aboutModel!.content,
-            // Use the correct extension set
             extensionSet: md.ExtensionSet.gitHubWeb,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                 .copyWith(
@@ -322,14 +319,15 @@ class _LightModeBackgroundPainter extends CustomPainter {
   final double animationValue;
   final Offset mousePosition;
 
-  _LightModeBackgroundPainter(
-      {required this.animationValue, required this.mousePosition});
+  _LightModeBackgroundPainter({
+    required this.animationValue,
+    required this.mousePosition,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
 
-    // Animated Gradient
     final gradient = LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -342,17 +340,15 @@ class _LightModeBackgroundPainter extends CustomPainter {
     paint.shader = gradient;
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
 
-    // Floating Orbs
     for (int i = 0; i < 5; i++) {
       final x =
           (sin(animationValue * 2 * pi + i * 2) * size.width * 0.4) +
-              (size.width * 0.5);
+          (size.width * 0.5);
       final y =
           (cos(animationValue * 2 * pi + i * 3) * size.height * 0.4) +
-              (size.height * 0.5);
+          (size.height * 0.5);
       final radius = 50 + (sin(animationValue * 2 * pi + i) * 20);
 
-      // Mouse Interaction
       final distance = (Offset(x, y) - mousePosition).distance;
       final proximity = 1 - (distance / 300).clamp(0.0, 1.0);
 

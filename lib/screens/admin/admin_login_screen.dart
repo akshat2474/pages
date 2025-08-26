@@ -159,8 +159,9 @@ class _AdminDashboardState extends State<AdminDashboard>
           .order('created_at', ascending: false);
 
       setState(() {
-        _posts =
-            response.map<PostModel>((json) => PostModel.fromJson(json)).toList();
+        _posts = response
+            .map<PostModel>((json) => PostModel.fromJson(json))
+            .toList();
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -211,8 +212,10 @@ class _AdminDashboardState extends State<AdminDashboard>
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child:
-                            Text('Logout', style: TextStyle(color: Colors.red)),
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                     ],
                   ),
@@ -248,7 +251,10 @@ class _AdminDashboardState extends State<AdminDashboard>
               children: [
                 WritePostTab(onPostCreated: _loadPosts),
                 ManagePostsTab(
-                    posts: _posts, isLoading: _isLoading, onRefresh: _loadPosts),
+                  posts: _posts,
+                  isLoading: _isLoading,
+                  onRefresh: _loadPosts,
+                ),
                 DailyContentTab(),
                 EditAboutTab(),
               ],

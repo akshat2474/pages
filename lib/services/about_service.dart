@@ -32,14 +32,21 @@ class AboutService {
   static Future<String> uploadProfilePicture(XFile image) async {
     try {
       final imageBytes = await image.readAsBytes();
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.${image.name.split('.').last}';
-      
-      await _client.storage.from('pfp').uploadBinary(
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}.${image.name.split('.').last}';
+
+      await _client.storage
+          .from('pfp')
+          .uploadBinary(
             fileName,
             imageBytes,
-            fileOptions: FileOptions(cacheControl: '3600', upsert: false, contentType: image.mimeType),
+            fileOptions: FileOptions(
+              cacheControl: '3600',
+              upsert: false,
+              contentType: image.mimeType,
+            ),
           );
-          
+
       return _client.storage.from('pfp').getPublicUrl(fileName);
     } catch (e) {
       throw Exception('Failed to upload profile picture: ${e.toString()}');

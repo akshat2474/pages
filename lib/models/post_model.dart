@@ -4,17 +4,17 @@ enum PostCategory {
   mentalHealth('mental-health'),
   selfHelp('self-help'),
   sliceOfLife('slice-of-life');
-  
+
   const PostCategory(this.value);
   final String value;
-  
+
   static PostCategory fromString(String value) {
     return PostCategory.values.firstWhere(
       (category) => category.value == value,
       orElse: () => PostCategory.mentalHealth,
     );
   }
-  
+
   String get displayName {
     switch (this) {
       case PostCategory.mentalHealth:

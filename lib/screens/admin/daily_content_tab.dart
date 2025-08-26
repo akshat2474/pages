@@ -42,21 +42,33 @@ class _DailyContentTabState extends State<DailyContentTab> {
     try {
       final content = DailyContentModel(
         date: DateTime.now(),
-        wordOfDay: _wordController.text.trim().isEmpty ? null : _wordController.text.trim(),
-        wordDefinition: _definitionController.text.trim().isEmpty ? null : _definitionController.text.trim(),
-        thoughtOfDay: _thoughtController.text.trim().isEmpty ? null : _thoughtController.text.trim(),
+        wordOfDay: _wordController.text.trim().isEmpty
+            ? null
+            : _wordController.text.trim(),
+        wordDefinition: _definitionController.text.trim().isEmpty
+            ? null
+            : _definitionController.text.trim(),
+        thoughtOfDay: _thoughtController.text.trim().isEmpty
+            ? null
+            : _thoughtController.text.trim(),
       );
 
       await DailyContentService.createOrUpdateDailyContent(content);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Daily content saved!'), backgroundColor: Colors.green),
+        SnackBar(
+          content: Text('Daily content saved!'),
+          backgroundColor: Colors.green,
+        ),
       );
 
       _loadTodaysContent();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Error saving: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -70,17 +82,22 @@ class _DailyContentTabState extends State<DailyContentTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Today\'s Daily Content', style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            'Today\'s Daily Content',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           SizedBox(height: 16),
 
-          // Word of the Day
           Card(
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Word of the Day', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    'Word of the Day',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   SizedBox(height: 8),
                   TextField(
                     controller: _wordController,
@@ -106,21 +123,24 @@ class _DailyContentTabState extends State<DailyContentTab> {
           ),
           SizedBox(height: 16),
 
-          // Thought of the Day
           Card(
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Thought of the Day', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    'Thought of the Day',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   SizedBox(height: 8),
                   TextField(
                     controller: _thoughtController,
                     decoration: InputDecoration(
                       labelText: 'Inspirational Thought',
                       border: OutlineInputBorder(),
-                      hintText: 'Your mental health is just as important as your physical health...',
+                      hintText:
+                          'Your mental health is just as important as your physical health...',
                     ),
                     maxLines: 4,
                   ),
@@ -130,7 +150,6 @@ class _DailyContentTabState extends State<DailyContentTab> {
           ),
           SizedBox(height: 24),
 
-          // Save button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -139,7 +158,7 @@ class _DailyContentTabState extends State<DailyContentTab> {
                 padding: EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal,
               ),
-              child: _isLoading 
+              child: _isLoading
                   ? CircularProgressIndicator(color: Colors.white)
                   : Text('Save Daily Content'),
             ),

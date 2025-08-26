@@ -37,8 +37,9 @@ class _EditAboutTabState extends State<EditAboutTab> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Error loading about content: $e'),
-            backgroundColor: Colors.red),
+          content: Text('Error loading about content: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -75,15 +76,17 @@ class _EditAboutTabState extends State<EditAboutTab> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('About page updated!'),
-            backgroundColor: Colors.green),
+          content: Text('About page updated!'),
+          backgroundColor: Colors.green,
+        ),
       );
       _loadAboutContent();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Error saving about content: $e'),
-            backgroundColor: Colors.red),
+          content: Text('Error saving about content: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -97,8 +100,10 @@ class _EditAboutTabState extends State<EditAboutTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Edit About Page',
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            'Edit About Page',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           SizedBox(height: 16),
           if (_isLoading)
             Center(child: CircularProgressIndicator())
@@ -112,10 +117,13 @@ class _EditAboutTabState extends State<EditAboutTab> {
                     backgroundImage: _imageBytes != null
                         ? MemoryImage(_imageBytes!)
                         : (_aboutModel?.profilePictureUrl != null
-                            ? NetworkImage(_aboutModel!.profilePictureUrl!)
-                            : null) as ImageProvider?,
-                    child: _image == null &&
-                            _aboutModel?.profilePictureUrl == null
+                                  ? NetworkImage(
+                                      _aboutModel!.profilePictureUrl!,
+                                    )
+                                  : null)
+                              as ImageProvider?,
+                    child:
+                        _image == null && _aboutModel?.profilePictureUrl == null
                         ? Icon(Icons.person, size: 50)
                         : null,
                   ),

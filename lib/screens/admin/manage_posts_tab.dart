@@ -17,7 +17,9 @@ class ManagePostsTab extends StatelessWidget {
   });
 
   Future<void> _togglePublishStatus(
-      BuildContext context, PostModel post) async {
+    BuildContext context,
+    PostModel post,
+  ) async {
     try {
       final updatedPost = post.copyWith(published: !post.published);
       await PostService.updatePost(updatedPost);
@@ -60,14 +62,17 @@ class ManagePostsTab extends StatelessWidget {
         await PostService.deletePost(post.id);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Post deleted'), backgroundColor: Colors.green),
+            content: Text('Post deleted'),
+            backgroundColor: Colors.green,
+          ),
         );
         onRefresh();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Error deleting post: $e'),
-              backgroundColor: Colors.red),
+            content: Text('Error deleting post: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -86,8 +91,10 @@ class ManagePostsTab extends StatelessWidget {
           children: [
             Icon(Icons.article_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text('No posts yet',
-                style: Theme.of(context).textTheme.headlineSmall),
+            Text(
+              'No posts yet',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
             Text('Create your first blog post using the Write Post tab'),
           ],
         ),
@@ -161,9 +168,11 @@ class ManagePostsTab extends StatelessWidget {
                         value: 'toggle',
                         child: Row(
                           children: [
-                            Icon(post.published
-                                ? Icons.visibility_off
-                                : Icons.visibility),
+                            Icon(
+                              post.published
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
                             SizedBox(width: 8),
                             Text(post.published ? 'Unpublish' : 'Publish'),
                           ],
@@ -186,15 +195,17 @@ class ManagePostsTab extends StatelessWidget {
                       } else if (value == 'delete') {
                         _deletePost(context, post);
                       } else if (value == 'edit') {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Scaffold(
-                            appBar: AppBar(title: Text('Edit Post')),
-                            body: WritePostTab(
-                              onPostCreated: onRefresh,
-                              postToEdit: post,
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              appBar: AppBar(title: Text('Edit Post')),
+                              body: WritePostTab(
+                                onPostCreated: onRefresh,
+                                postToEdit: post,
+                              ),
                             ),
                           ),
-                        ));
+                        );
                       }
                     },
                   ),

@@ -16,7 +16,7 @@ class SkeletonContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Shimmer.fromColors(
       baseColor: isDark ? Colors.grey[800]! : Colors.grey[300]!,
       highlightColor: isDark ? Colors.grey[700]! : Colors.grey[100]!,
@@ -44,10 +44,7 @@ class PostCardSkeleton extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-          width: 1,
-        ),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,51 +53,48 @@ class PostCardSkeleton extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Category skeleton
                 SkeletonContainer(
                   width: 80,
                   height: 16,
                   borderRadius: BorderRadius.circular(4),
                 ),
-                
+
                 SizedBox(height: 16),
-                
-                // Title skeleton
+
                 SkeletonContainer(
                   width: double.infinity,
                   height: isLarge ? 32 : 24,
                 ),
-                
+
                 SizedBox(height: 8),
-                
+
                 SkeletonContainer(
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: isLarge ? 32 : 24,
                 ),
-                
+
                 SizedBox(height: 12),
-                
-                // Content skeleton
-                SkeletonContainer(
-                  width: double.infinity,
-                  height: 16,
-                ),
-                
+
+                SkeletonContainer(width: double.infinity, height: 16),
+
                 SizedBox(height: 8),
-                
+
                 SkeletonContainer(
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: 16,
                 ),
-                
+
                 SizedBox(height: 20),
-                
-                // Meta info skeleton
+
                 Row(
                   children: [
                     SkeletonContainer(width: 80, height: 12),
                     SizedBox(width: 8),
-                    SkeletonContainer(width: 4, height: 4, borderRadius: BorderRadius.circular(2)),
+                    SkeletonContainer(
+                      width: 4,
+                      height: 4,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                     SizedBox(width: 8),
                     SkeletonContainer(width: 60, height: 12),
                     Spacer(),
@@ -110,7 +104,7 @@ class PostCardSkeleton extends StatelessWidget {
               ],
             ),
           ),
-          
+
           if (isLarge) ...[
             SizedBox(width: 32),
             SkeletonContainer(
@@ -141,7 +135,6 @@ class DailyContentSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header skeleton
           Row(
             children: [
               SkeletonContainer(
@@ -153,10 +146,9 @@ class DailyContentSkeleton extends StatelessWidget {
               SkeletonContainer(width: 180, height: 18),
             ],
           ),
-          
+
           SizedBox(height: 24),
-          
-          // Word section skeleton
+
           Row(
             children: [
               SkeletonContainer(width: 20, height: 20),
@@ -165,7 +157,7 @@ class DailyContentSkeleton extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12),
-          
+
           Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -179,14 +171,16 @@ class DailyContentSkeleton extends StatelessWidget {
                 SizedBox(height: 8),
                 SkeletonContainer(width: double.infinity, height: 16),
                 SizedBox(height: 4),
-                SkeletonContainer(width: MediaQuery.of(context).size.width * 0.6, height: 16),
+                SkeletonContainer(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: 16,
+                ),
               ],
             ),
           ),
-          
+
           SizedBox(height: 24),
-          
-          // Thought section skeleton
+
           Row(
             children: [
               SkeletonContainer(width: 20, height: 20),
@@ -195,7 +189,7 @@ class DailyContentSkeleton extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12),
-          
+
           Container(
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -206,9 +200,15 @@ class DailyContentSkeleton extends StatelessWidget {
               children: [
                 SkeletonContainer(width: double.infinity, height: 18),
                 SizedBox(height: 8),
-                SkeletonContainer(width: MediaQuery.of(context).size.width * 0.8, height: 18),
+                SkeletonContainer(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 18,
+                ),
                 SizedBox(height: 8),
-                SkeletonContainer(width: MediaQuery.of(context).size.width * 0.9, height: 18),
+                SkeletonContainer(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 18,
+                ),
               ],
             ),
           ),
@@ -220,9 +220,9 @@ class DailyContentSkeleton extends StatelessWidget {
 
 class PostListSkeleton extends StatelessWidget {
   final int itemCount;
-  
+
   const PostListSkeleton({super.key, this.itemCount = 6});
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -239,9 +239,9 @@ class PostListSkeleton extends StatelessWidget {
 
 class RecentPostsSkeleton extends StatelessWidget {
   final int itemCount;
-  
+
   const RecentPostsSkeleton({super.key, this.itemCount = 6});
-  
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -270,21 +270,27 @@ class RecentPostsSkeleton extends StatelessWidget {
                 height: 14,
                 borderRadius: BorderRadius.circular(3),
               ),
-              
+
               SizedBox(height: 16),
-              
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SkeletonContainer(width: double.infinity, height: 18),
                     SizedBox(height: 8),
-                    SkeletonContainer(width: MediaQuery.of(context).size.width * 0.8, height: 18),
+                    SkeletonContainer(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: 18,
+                    ),
                     SizedBox(height: 8),
-                    SkeletonContainer(width: MediaQuery.of(context).size.width * 0.6, height: 18),
-                    
+                    SkeletonContainer(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      height: 18,
+                    ),
+
                     Spacer(),
-                    
+
                     SkeletonContainer(width: 60, height: 12),
                   ],
                 ),

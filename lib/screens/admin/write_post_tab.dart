@@ -6,11 +6,7 @@ class WritePostTab extends StatefulWidget {
   final VoidCallback onPostCreated;
   final PostModel? postToEdit;
 
-  const WritePostTab({
-    super.key,
-    required this.onPostCreated,
-    this.postToEdit,
-  });
+  const WritePostTab({super.key, required this.onPostCreated, this.postToEdit});
 
   @override
   _WritePostTabState createState() => _WritePostTabState();
@@ -50,8 +46,9 @@ class _WritePostTabState extends State<WritePostTab> {
         _contentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Title and content are required'),
-            backgroundColor: Colors.red),
+          content: Text('Title and content are required'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -73,8 +70,9 @@ class _WritePostTabState extends State<WritePostTab> {
         await PostService.updatePost(updatedPost);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Post updated successfully!'),
-              backgroundColor: Colors.green),
+            content: Text('Post updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
         );
         if (mounted) {
           Navigator.of(context).pop();
@@ -93,8 +91,9 @@ class _WritePostTabState extends State<WritePostTab> {
         await PostService.createPost(post);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Post saved successfully!'),
-              backgroundColor: Colors.green),
+            content: Text('Post saved successfully!'),
+            backgroundColor: Colors.green,
+          ),
         );
         _titleController.clear();
         _contentController.clear();
@@ -109,8 +108,9 @@ class _WritePostTabState extends State<WritePostTab> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Error saving post: $e'),
-            backgroundColor: Colors.red),
+          content: Text('Error saving post: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) {
@@ -126,8 +126,10 @@ class _WritePostTabState extends State<WritePostTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_isEditing ? 'Edit Post' : 'Write a New Post',
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            _isEditing ? 'Edit Post' : 'Write a New Post',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           SizedBox(height: 24),
           Card(
             elevation: 2,
@@ -200,10 +202,16 @@ class _WritePostTabState extends State<WritePostTab> {
           Card(
             elevation: 2,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
               child: Row(
                 children: [
-                  Icon(Icons.publish, color: Theme.of(context).textTheme.bodySmall?.color),
+                  Icon(
+                    Icons.publish,
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
                   SizedBox(width: 8),
                   Text('Publish'),
                   Spacer(),

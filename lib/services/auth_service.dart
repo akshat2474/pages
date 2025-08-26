@@ -3,7 +3,7 @@ import '../config/supabase_config.dart';
 
 class AuthService {
   static final _client = SupabaseConfig.client;
-  
+
   static Future<AuthResponse> signInAdmin(String password) async {
     try {
       final response = await _client.auth.signInWithPassword(
@@ -15,7 +15,7 @@ class AuthService {
       throw Exception('Admin login failed: ${e.toString()}');
     }
   }
-  
+
   static Future<AuthResponse> signInAnonymously() async {
     try {
       final response = await _client.auth.signInAnonymously();
@@ -24,7 +24,7 @@ class AuthService {
       throw Exception('Anonymous sign-in failed: ${e.toString()}');
     }
   }
-  
+
   static Future<void> signOut() async {
     try {
       await _client.auth.signOut();
@@ -32,13 +32,14 @@ class AuthService {
       throw Exception('Sign out failed: ${e.toString()}');
     }
   }
-  
+
   static bool get isAdmin {
     final user = _client.auth.currentUser;
     return user?.email == SupabaseConfig.adminEmail;
   }
-  
+
   static User? get currentUser => _client.auth.currentUser;
-  
-  static Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
+
+  static Stream<AuthState> get authStateChanges =>
+      _client.auth.onAuthStateChange;
 }

@@ -3,7 +3,8 @@ import '../models/post_model.dart';
 
 class SocialShareUtil {
   static Future<void> sharePost(PostModel post) async {
-    final String content = '''
+    final String content =
+        '''
 ${post.title}
 
 ${_getExcerpt(post)}...
@@ -14,10 +15,7 @@ Read more at MindJourney Blog
     ''';
 
     try {
-      await Share.share(
-        content,
-        subject: post.title,
-      );
+      await Share.share(content, subject: post.title);
     } catch (e) {
       print('Error sharing: $e');
     }
@@ -25,7 +23,8 @@ Read more at MindJourney Blog
 
   static Future<void> sharePostWithCategory(PostModel post) async {
     final categoryTag = _getCategoryHashtag(post.category);
-    final String content = '''
+    final String content =
+        '''
 ${post.title}
 
 ${_getExcerpt(post)}...
@@ -52,16 +51,16 @@ Read more at MindJourney Blog
     if (post.excerpt != null && post.excerpt!.isNotEmpty) {
       return post.excerpt!;
     }
-    
+
     final cleanContent = post.content
         .replaceAll(RegExp(r'[#*`_~\[\](){}]'), '')
         .replaceAll(RegExp(r'<[^>]*>'), '')
         .trim();
-    
+
     if (cleanContent.length <= 150) {
       return cleanContent;
     }
-    
+
     return cleanContent.substring(0, 150);
   }
 

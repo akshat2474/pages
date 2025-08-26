@@ -11,8 +11,10 @@ class PostService {
           .select()
           .eq('published', true)
           .order('created_at', ascending: false);
-      
-      return response.map<PostModel>((json) => PostModel.fromJson(json)).toList();
+
+      return response
+          .map<PostModel>((json) => PostModel.fromJson(json))
+          .toList();
     } catch (e) {
       throw Exception('Failed to fetch posts: ${e.toString()}');
     }
@@ -26,7 +28,7 @@ class PostService {
           .eq('slug', slug)
           .eq('published', true)
           .maybeSingle();
-      
+
       if (response == null) return null;
       return PostModel.fromJson(response);
     } catch (e) {
@@ -34,7 +36,9 @@ class PostService {
     }
   }
 
-  static Future<List<PostModel>> getPostsByCategory(PostCategory category) async {
+  static Future<List<PostModel>> getPostsByCategory(
+    PostCategory category,
+  ) async {
     try {
       final response = await _client
           .from('posts')
@@ -42,8 +46,10 @@ class PostService {
           .eq('category', category.value)
           .eq('published', true)
           .order('created_at', ascending: false);
-      
-      return response.map<PostModel>((json) => PostModel.fromJson(json)).toList();
+
+      return response
+          .map<PostModel>((json) => PostModel.fromJson(json))
+          .toList();
     } catch (e) {
       throw Exception('Failed to fetch posts by category: ${e.toString()}');
     }
@@ -56,7 +62,7 @@ class PostService {
           .insert(post.toJson())
           .select()
           .single();
-      
+
       return PostModel.fromJson(response);
     } catch (e) {
       throw Exception('Failed to create post: ${e.toString()}');
@@ -71,7 +77,7 @@ class PostService {
           .eq('id', post.id)
           .select()
           .single();
-      
+
       return PostModel.fromJson(response);
     } catch (e) {
       throw Exception('Failed to update post: ${e.toString()}');
@@ -80,10 +86,7 @@ class PostService {
 
   static Future<void> deletePost(String postId) async {
     try {
-      await _client
-          .from('posts')
-          .delete()
-          .eq('id', postId);
+      await _client.from('posts').delete().eq('id', postId);
     } catch (e) {
       throw Exception('Failed to delete post: ${e.toString()}');
     }
@@ -105,8 +108,10 @@ class PostService {
           .textSearch('search_vector', query)
           .eq('published', true)
           .order('created_at', ascending: false);
-      
-      return response.map<PostModel>((json) => PostModel.fromJson(json)).toList();
+
+      return response
+          .map<PostModel>((json) => PostModel.fromJson(json))
+          .toList();
     } catch (e) {
       throw Exception('Failed to search posts: ${e.toString()}');
     }

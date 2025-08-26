@@ -3,11 +3,7 @@ class AboutModel {
   final String content;
   final String? profilePictureUrl;
 
-  AboutModel({
-    required this.id,
-    required this.content,
-    this.profilePictureUrl,
-  });
+  AboutModel({required this.id, required this.content, this.profilePictureUrl});
 
   factory AboutModel.fromJson(Map<String, dynamic> json) {
     return AboutModel(
