@@ -1,12 +1,11 @@
 #!/bin/bash
-set -e  # Exit on any error
+set -e
 
 echo "Starting Flutter setup..."
 
-# Use newer Flutter version that includes Dart SDK 3.8.1+
-FLUTTER_VERSION=3.35.0
-curl -Lo flutter.tar.xz "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
-
+# Use Flutter 3.27 or newer for Material 3 support
+echo "Downloading Flutter SDK 3.27+"
+curl -Lo flutter.tar.xz "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_stable.tar.xz"
 
 # Extract Flutter SDK
 echo "Extracting Flutter SDK..."
@@ -15,21 +14,19 @@ tar -xf flutter.tar.xz
 # Add Flutter to PATH
 export PATH="$PWD/flutter/bin:$PATH"
 
-# Verify Flutter and Dart versions
+# Verify versions
 echo "Verifying installation..."
 flutter --version
 dart --version
 
 # Enable web support
-echo "Enabling web support..."
 flutter config --enable-web
 
-# Get dependencies
-echo "Getting dependencies..."
+# Clean and get dependencies
+flutter clean
 flutter pub get
 
 # Build web app
-echo "Building web app..."
 flutter build web --release \
   --dart-define=SUPABASE_URL=$SUPABASE_URL \
   --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
