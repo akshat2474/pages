@@ -3,8 +3,8 @@ set -e  # Exit on any error
 
 echo "Starting Flutter setup..."
 
-# Download Flutter SDK
-FLUTTER_VERSION=3.22.0
+# Use newer Flutter version that includes Dart SDK 3.8.1+
+FLUTTER_VERSION=3.24.0
 echo "Downloading Flutter SDK version $FLUTTER_VERSION"
 curl -Lo flutter.tar.xz "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
 
@@ -15,10 +15,10 @@ tar -xf flutter.tar.xz
 # Add Flutter to PATH
 export PATH="$PWD/flutter/bin:$PATH"
 
-# Verify Flutter is working
-echo "Verifying Flutter installation..."
+# Verify Flutter and Dart versions
+echo "Verifying installation..."
 flutter --version
-flutter doctor
+dart --version
 
 # Enable web support
 echo "Enabling web support..."
