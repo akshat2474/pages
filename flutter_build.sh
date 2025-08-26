@@ -4,9 +4,9 @@ set -e  # Exit on any error
 echo "Starting Flutter setup..."
 
 # Use newer Flutter version that includes Dart SDK 3.8.1+
-FLUTTER_VERSION=3.24.0
-echo "Downloading Flutter SDK version $FLUTTER_VERSION"
+FLUTTER_VERSION=3.35.0
 curl -Lo flutter.tar.xz "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
+
 
 # Extract Flutter SDK
 echo "Extracting Flutter SDK..."
