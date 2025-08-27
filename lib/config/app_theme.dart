@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color lightPrimary = Color(
-    0xFF1A1A1A,
-  ); // Very dark gray for text
-  static const Color lightSecondary = Color(
-    0xFF6B7280,
-  ); // Muted gray for subtitles
-  static const Color lightAccent = Color(
-    0xFF10B981,
-  ); // Bright green for accents
-  static const Color lightBackground = Color(
-    0xFFFFFFFF,
-  ); // Pure white background
-  static const Color lightCard = Color(
-    0xFFFFFFFF,
-  ); // Cards blend with the background
+  static const Color primaryBrandColor = Color(0xFF6366F1);
+  static const Color lightPrimary = Color(0xFF1A1A1A); 
+  static const Color lightSecondary = Color(0xFF6B7280);
+  static const Color lightAccent = Color(0xFF10B981);
+  static const Color lightBackground = Color(0xFFFFFFFF);
+  static const Color lightCard = Color(0xFFFFFFFF);
   static const Color lightText = Color(0xFF111827);
   static const Color lightTextSecondary = Color(0xFF6B7280);
-  static const Color lightBorder = Color(
-    0xFFE5E7EB,
-  ); // Lighter border for inputs
+  static const Color lightBorder = Color(0xFFE5E7EB);
 
-  static const Color darkPrimary = Color(0xFFFFFFFF); // White for primary text
-  static const Color darkSecondary = Color(
-    0xFFB3B3B3,
-  ); // Light gray for secondary text
-  static const Color darkAccent = Color(
-    0xFFFFFFFF,
-  ); // White for accents and buttons
-  static const Color darkBackground = Color(
-    0xFF000000,
-  ); // Pure black background
-  static const Color darkCard = Color(0xFF1A1A1A); // Very dark gray for cards
-  static const Color darkText = Color(0xFFFFFFFF); // Pure white for body text
-  static const Color darkTextSecondary = Color(
-    0xFFB3B3B3,
-  ); // Light gray for subtitles
-  static const Color darkBorder = Color(0xFF2A2A2A); // Subtle border for cards
+  static const Color darkPrimary = Color(0xFFFFFFFF);
+  static const Color darkSecondary = Color(0xFFB3B3B3);
+  static const Color darkAccent = Color(0xFFFFFFFF);
+  static const Color darkBackground = Color(0xFF000000);
+  static const Color darkCard = Color(0xFF1A1A1A);
+  static const Color darkText = Color(0xFFFFFFFF);
+  static const Color darkTextSecondary = Color(0xFFB3B3B3);
+  static const Color darkBorder = Color(0xFF2A2A2A);
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
@@ -45,7 +26,7 @@ class AppTheme {
     brightness: Brightness.light,
 
     colorScheme: ColorScheme.light(
-      primary: lightPrimary,
+      primary: primaryBrandColor,
       secondary: lightAccent,
       surface: lightCard,
       background: lightBackground,
@@ -108,7 +89,7 @@ class AppTheme {
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: lightText,
-        height: 1.7,
+        height: 1.8,
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
@@ -149,7 +130,7 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: lightPrimary,
+        backgroundColor: primaryBrandColor,
         foregroundColor: Colors.white,
         elevation: 0,
         shadowColor: Colors.transparent,
@@ -171,7 +152,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: lightPrimary, width: 2),
+        borderSide: BorderSide(color: primaryBrandColor, width: 2),
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
@@ -183,7 +164,7 @@ class AppTheme {
     brightness: Brightness.dark,
 
     colorScheme: ColorScheme.dark(
-      primary: darkPrimary,
+      primary: primaryBrandColor,
       secondary: darkAccent,
       surface: darkCard,
       background: darkBackground,
@@ -246,7 +227,7 @@ class AppTheme {
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: darkText,
-        height: 1.7,
+        height: 1.8,
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
@@ -287,8 +268,8 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: primaryBrandColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -309,7 +290,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: darkAccent, width: 2),
+        borderSide: BorderSide(color: primaryBrandColor, width: 2),
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),

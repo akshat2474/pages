@@ -92,11 +92,34 @@ class PostService {
     }
   }
 
-  static Future<void> incrementLikes(String postId) async {
+  static Future<Map<String, dynamic>> toggleLike(String postId, String userId) async {
     try {
-      await _client.rpc('increment_likes', params: {'post_id': postId});
+      final result = await _client.rpc('toggle_like', params: {
+        'p_post_id': postId,
+        'p_user_id': userId,
+      });
+      return {
+        'liked': result['liked'],
+        'likes_count': result['likes_count'],
+      };
     } catch (e) {
-      throw Exception('Failed to increment likes: ${e.toString()}');
+      throw Exception('Failed to toggle like: ${e.toString()}');
+    }
+  }
+
+  static Future<bool> checkIfLiked(String postId, String userId) async {
+    try {
+      final response = await _client
+          .from('post_likes')
+          .select()
+          .eq('post_id', postId)
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      return response != null;
+    } catch (e) {
+      print('Error checking if liked: $e');
+      return false;
     }
   }
 

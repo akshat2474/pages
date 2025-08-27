@@ -25,6 +25,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   List<CommentModel> _comments = [];
   bool _isLoading = true;
+  bool _isLiking = false; // Separate loading state for the like button
   bool _isLiked = false;
   int _likeCount = 0;
   String? _replyingTo;
@@ -35,10 +36,10 @@ class PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _loadComments();
-    _checkIfLiked();
-    _loadUserVotes();
     _likeCount = widget.post.likesCount;
+    _loadInitialData();
+    _loadComments();
+    _loadUserVotes();
 
     _scrollController.addListener(() {
       if (_scrollController.offset > 400 && !_showScrollToTop) {
@@ -47,6 +48,18 @@ class PostDetailScreenState extends State<PostDetailScreen> {
         setState(() => _showScrollToTop = false);
       }
     });
+  }
+
+  Future<void> _loadInitialData() async {
+    setState(() => _isLoading = true);
+    final userId = await AuthService.getUserId();
+    final liked = await PostService.checkIfLiked(widget.post.id, userId);
+    if (mounted) {
+      setState(() {
+        _isLiked = liked;
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadComments() async {
@@ -116,59 +129,32 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     }
   }
 
-  Future<void> _checkIfLiked() async {
-    final prefs = await SharedPreferences.getInstance();
-    final likedPosts = prefs.getStringList('liked_posts') ?? [];
-    if (mounted) {
-      setState(() {
-        _isLiked = likedPosts.contains(widget.post.id);
-      });
-    }
-  }
-
   Future<void> _toggleLike() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> likedPosts = prefs.getStringList('liked_posts') ?? [];
-
-    setState(() {
-      if (_isLiked) {
-        likedPosts.remove(widget.post.id);
-        _likeCount = _likeCount > 0 ? _likeCount - 1 : 0;
-      } else {
-        likedPosts.add(widget.post.id);
-        _likeCount++;
-      }
-      _isLiked = !_isLiked;
-    });
-
-    await prefs.setStringList('liked_posts', likedPosts);
+    if (_isLiking) return;
+    setState(() => _isLiking = true);
 
     try {
-      if (_isLiked) {
-        await PostService.incrementLikes(widget.post.id);
+      final userId = await AuthService.getUserId();
+      final result = await PostService.toggleLike(widget.post.id, userId);
+
+      if (mounted) {
+        setState(() {
+          _isLiked = result['liked'];
+          _likeCount = result['likes_count'];
+        });
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          if (_isLiked) {
-            likedPosts.remove(widget.post.id);
-            _likeCount--;
-            _isLiked = false;
-          } else {
-            likedPosts.add(widget.post.id);
-            _likeCount++;
-            _isLiked = true;
-          }
-        });
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error updating like status: $e'),
             backgroundColor: Colors.red,
           ),
         );
-
-        await prefs.setStringList('liked_posts', likedPosts);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLiking = false);
       }
     }
   }
