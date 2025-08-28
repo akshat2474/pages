@@ -1,6 +1,5 @@
 import 'package:blog/services/auth_service.dart';
 import 'package:blog/utils/social_share_util.dart';
-import 'package:blog/widgets/blinking_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
@@ -266,8 +265,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           : const Color(0xFFFAFAFA),
       body: Stack(
         children: [
-          if (isDarkMode)
-            const Positioned.fill(child: BlinkingDotsBackground()),
 
           CustomScrollView(
             controller: _scrollController,

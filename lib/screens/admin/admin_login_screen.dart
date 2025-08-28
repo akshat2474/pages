@@ -1,6 +1,5 @@
 import 'package:blog/screens/admin/edit_about_tab.dart';
 import 'package:blog/screens/blog/noter_home_screen.dart';
-import 'package:blog/widgets/blinking_background.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../models/post_model.dart';
@@ -63,8 +62,6 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
       appBar: AppBar(title: Text('Admin Login')),
       body: Stack(
         children: [
-          if (isDarkMode)
-            const Positioned.fill(child: BlinkingDotsBackground()),
           Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -244,8 +241,6 @@ class AdminDashboardState extends State<AdminDashboard>
         ),
         body: Stack(
           children: [
-            if (isDarkMode)
-              const Positioned.fill(child: BlinkingDotsBackground()),
             TabBarView(
               controller: _tabController,
               children: [

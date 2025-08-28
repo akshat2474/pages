@@ -17,7 +17,6 @@ import '../../utils/reading_time_util.dart';
 import '../../widgets/animated_widgets.dart';
 import '../../widgets/skeleton_widgets.dart';
 import '../../utils/page_transitions.dart';
-import '../../widgets/blinking_background.dart';
 import '../../widgets/footer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -44,8 +43,8 @@ class PinkSquiggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final squiggleColor = isDarkMode
-        ? const Color(0xFF8B5CF6).withValues(alpha:0.6)
-        : Colors.pink.withValues(alpha:0.3);
+        ? const Color(0xFF8B5CF6).withOpacity(0.6)
+        : Colors.pink.withOpacity(0.3);
 
     return SizedBox(
       width: 80,
@@ -131,8 +130,6 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
-          if (isDarkMode)
-            const Positioned.fill(child: BlinkingDotsBackground()),
           LayoutBuilder(
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth > 800;
@@ -289,10 +286,10 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary.withValues(alpha:0.1),
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Theme.of(context).colorScheme.secondary.withValues(alpha:0.2),
+                color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
               ),
             ),
             child: Text(
@@ -328,9 +325,9 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
             child: Text(
               'Discover insights, tips, and inspiration for your mental wellbeing. A safe space for growth, healing, and self-discovery.',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).textTheme.bodyMedium?.color,
-                fontSize: 18,
-              ),
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                    fontSize: 18,
+                  ),
             ),
           ),
           const SizedBox(height: 40),
@@ -400,60 +397,83 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode
+              ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+              : [const Color(0xFFF1F5F9), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=100&fit=crop&crop=center',
-                  width: 48,
-                  height: 48,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Container(width: 48, height: 48, color: Colors.grey[300]),
-                  errorWidget: (context, url, error) => Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.wb_sunny,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF63C4B6).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                child: const Icon(Icons.wb_sunny_outlined,
+                    color: Color(0xFF63C4B6), size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   'Today\'s Daily Inspiration',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: const Color(0xFF63C4B6),
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          if (todaysContent!.wordOfDay != null) ...[
-            _buildWordSection(),
-            if (todaysContent!.thoughtOfDay != null) const SizedBox(height: 24),
-          ],
-          if (todaysContent!.thoughtOfDay != null) ...[_buildThoughtSection()],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              bool isWide = constraints.maxWidth > 600;
+              final children = [
+                if (todaysContent!.wordOfDay != null)
+                  Expanded(child: _buildWordSection()),
+                if (isWide &&
+                    todaysContent!.wordOfDay != null &&
+                    todaysContent!.thoughtOfDay != null)
+                  const SizedBox(width: 24),
+                if (todaysContent!.thoughtOfDay != null)
+                  Expanded(child: _buildThoughtSection()),
+              ];
+
+              return isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: children)
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (todaysContent!.wordOfDay != null)
+                          _buildWordSection(),
+                        if (todaysContent!.wordOfDay != null &&
+                            todaysContent!.thoughtOfDay != null)
+                          const SizedBox(height: 24),
+                        if (todaysContent!.thoughtOfDay != null)
+                          _buildThoughtSection(),
+                      ],
+                    );
+            },
+          ),
         ],
       ),
     );
@@ -461,127 +481,118 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
 
   Widget _buildWordSection() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              Icons.psychology_outlined,
-              color: const Color(0xFF63C4B6),
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'Word of the Day',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: const Color(0xFF63C4B6),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [
+                  const Color(0xFF374151),
+                  const Color(0xFF1F2937),
+                ]
+              : [
+                  const Color(0xFFD3EADD),
+                  const Color(0xFFF0F7F6),
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isDarkMode
-                ? const Color(0xFFD3EADD).withValues(alpha:0.1)
-                : const Color(0xFFF0F7F6),
-            borderRadius: BorderRadius.circular(12),
-            border: isDarkMode
-                ? Border.all(color: const Color(0xFF63C4B6).withValues(alpha:0.4))
-                : null,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Text(
-                todaysContent!.wordOfDay!,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isDarkMode
-                      ? Colors.white
-                      : Theme.of(context).textTheme.bodyLarge?.color,
-                ),
+              Icon(
+                Icons.psychology_outlined,
+                color: isDarkMode ? Colors.white70 : const Color(0xFF047857),
+                size: 20,
               ),
-              if (todaysContent!.wordDefinition != null) ...[
-                const SizedBox(height: 8),
-                Text(
-                  todaysContent!.wordDefinition!,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: isDarkMode
-                        ? Colors.white70
-                        : Theme.of(context).textTheme.bodyLarge?.color,
-                    height: 1.6,
-                  ),
-                ),
-              ],
+              const SizedBox(width: 8),
+              Text(
+                'Word of the Day',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color:
+                          isDarkMode ? Colors.white70 : const Color(0xFF047857),
+                    ),
+              ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 12),
+          Text(
+            todaysContent!.wordOfDay!,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          if (todaysContent!.wordDefinition != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              todaysContent!.wordDefinition!,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: isDarkMode ? Colors.white70 : Colors.black87,
+                    height: 1.6,
+                  ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 
   Widget _buildThoughtSection() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.format_quote, color: const Color(0xFF63C4B6), size: 20),
-            const SizedBox(width: 8),
-            Text(
-              'Thought of the Day',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: const Color(0xFF63C4B6),
-                fontWeight: FontWeight.w600,
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDarkMode ? const Color(0xFF111827) : const Color(0xFFF0F7F6),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.format_quote,
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                  size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Thought of the Day',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isDarkMode ? Colors.white70 : Colors.black54,
+                    ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: isDarkMode
-                ? const Color(0xFFD3EADD).withValues(alpha:0.1)
-                : const Color(0xFFF0F7F6),
-            borderRadius: BorderRadius.circular(12),
-            border: isDarkMode
-                ? Border.all(color: const Color(0xFF63C4B6).withValues(alpha:0.4))
-                : null,
+            ],
           ),
-          child: Row(
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
                 Icons.format_quote,
-                color: const Color(0xFF63C4B6).withValues(alpha:0.7),
+                color: const Color(0xFF63C4B6).withOpacity(0.7),
                 size: 32,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   todaysContent!.thoughtOfDay!,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: isDarkMode
-                        ? Colors.white70
-                        : Theme.of(context).textTheme.bodyLarge?.color,
-                    height: 1.5,
-                    fontSize: 16,
-                  ),
+                        fontStyle: FontStyle.italic,
+                        color: isDarkMode ? Colors.white70 : Colors.black87,
+                        height: 1.5,
+                        fontSize: 16,
+                      ),
                 ),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -634,22 +645,37 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
   }
 
   Widget _buildFeaturedCard(PostModel post, bool isLarge) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final categoryColor = _getCategoryColor(post.category);
+
     return InkWell(
       onTap: () {
         Navigator.of(
           context,
         ).push(SlideUpPageRoute(page: PostDetailScreen(post: post)));
       },
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.grey.shade200
-                : Theme.of(context).dividerColor,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDarkMode
+                ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+                : [categoryColor.withOpacity(0.05), Colors.white],
           ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -660,89 +686,78 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 10,
+                      vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: _getCategoryColor(post.category),
-                      borderRadius: BorderRadius.circular(4),
+                      color: categoryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       post.category.displayName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                      style: TextStyle(
+                        color: categoryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Text(
                     post.title,
                     style: isLarge
-                        ? Theme.of(context).textTheme.displayMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          )
-                        : Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        ? Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            )
+                        : Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   Text(
                     post.excerpt ??
                         '${post.content.substring(0, post.content.length > 120 ? 120 : post.content.length)}...',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                          height: 1.6,
+                        ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        size: 14,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                      ),
+                      const SizedBox(width: 4),
                       Text(
                         DateFormat('MMM dd, yyyy').format(post.createdAt),
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                          fontSize: 12,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                          shape: BoxShape.circle,
-                        ),
+                      const SizedBox(width: 12),
+                      Icon(
+                        Icons.timer_outlined,
+                        size: 14,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4),
                       Text(
                         ReadingTimeUtil.calculateReadingTime(post.content),
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                          fontSize: 12,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      const SizedBox(width: 16),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.favorite_border,
-                            size: 14,
-                            color: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.color,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${post.likesCount}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(
-                                context,
-                              ).textTheme.bodyMedium?.color,
-                            ),
-                          ),
-                        ],
+                      const Spacer(),
+                      Icon(
+                        Icons.favorite_border,
+                        size: 14,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${post.likesCount}',
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -757,11 +772,19 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(8),
+                  image: post.featuredImageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(post.featuredImageUrl!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
-                child: Icon(
-                  Icons.article_outlined,
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
-                ),
+                child: post.featuredImageUrl == null
+                    ? Icon(
+                        Icons.article_outlined,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      )
+                    : null,
               ),
             ],
           ],

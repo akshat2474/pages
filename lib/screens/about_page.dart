@@ -5,7 +5,6 @@ import 'package:markdown/markdown.dart' as md;
 import '../models/about_model.dart';
 import '../services/about_service.dart';
 import '../widgets/animated_widgets.dart';
-import '../widgets/blinking_background.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -91,9 +90,6 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
         },
         child: Stack(
           children: [
-            if (isDarkMode)
-              const Positioned.fill(child: BlinkingDotsBackground())
-            else
               _buildLightModeBackground(),
 
             _isLoading
