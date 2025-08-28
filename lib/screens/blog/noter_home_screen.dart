@@ -18,7 +18,6 @@ import '../../widgets/animated_widgets.dart';
 import '../../widgets/skeleton_widgets.dart';
 import '../../utils/page_transitions.dart';
 import '../../widgets/footer.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class GreenUnderline extends StatelessWidget {
   const GreenUnderline({super.key});
@@ -124,7 +123,6 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

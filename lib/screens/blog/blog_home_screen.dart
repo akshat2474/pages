@@ -55,7 +55,6 @@ class BlogHomeScreenState extends State<BlogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       children: [
         Column(

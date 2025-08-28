@@ -32,7 +32,7 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
       if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => AdminDashboard()),
+          MaterialPageRoute(builder: (context) => const AdminDashboard()),
           (route) => false,
         );
       }
@@ -59,66 +59,134 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(title: Text('Admin Login')),
+      appBar: AppBar(
+        title: const Text('Admin Login'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.admin_panel_settings, size: 64, color: Colors.teal),
-                SizedBox(height: 24),
-                Text(
-                  'Admin Access',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Enter your password to access the admin panel',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 24),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
-                  ),
-                  obscureText: true,
-                  onSubmitted: (_) => _signIn(),
-                ),
-                SizedBox(height: 16),
-                if (_errorMessage != null) ...[
-                  Container(
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: .1),
-                      borderRadius: BorderRadius.circular(8),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: isDarkMode
+                          ? [
+                              const Color(0xFF1E293B),
+                              const Color(0xFF0F172A)
+                            ]
+                          : [const Color(0xFFF1F5F9), Colors.white],
                     ),
-                    child: Text(
-                      _errorMessage!,
-                      style: TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isDarkMode
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade200,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      )
+                    ],
                   ),
-                  SizedBox(height: 16),
-                ],
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signIn,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: _isLoading
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text('Login'),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.admin_panel_settings_outlined,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Admin Access',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Enter your password to access the dashboard',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 32),
+                      TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: const Icon(Icons.lock_outline),
+                        ),
+                        obscureText: true,
+                        onSubmitted: (_) => _signIn(),
+                      ),
+                      const SizedBox(height: 16),
+                      if (_errorMessage != null) ...[
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.red.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Text(
+                            _errorMessage!,
+                            style: const TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _signIn,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('Login'),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -161,6 +229,7 @@ class AdminDashboardState extends State<AdminDashboard>
             .toList();
       });
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error loading posts: $e'),
@@ -168,48 +237,49 @@ class AdminDashboardState extends State<AdminDashboard>
         ),
       );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
       onWillPop: () async {
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Admin Dashboard'),
+          title: const Text('Admin Dashboard'),
           automaticallyImplyLeading: false,
           actions: [
             IconButton(
-              icon: Icon(Icons.home),
+              icon: const Icon(Icons.home_outlined),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => NoterHomeScreen()),
+                  MaterialPageRoute(builder: (context) => const NoterHomeScreen()),
                   (route) => false,
                 );
               },
             ),
             IconButton(
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
               onPressed: () async {
                 final shouldLogout = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text('Logout'),
-                    content: Text('Are you sure you want to logout?'),
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child: Text(
+                        child: const Text(
                           'Logout',
                           style: TextStyle(color: Colors.red),
                         ),
@@ -220,9 +290,11 @@ class AdminDashboardState extends State<AdminDashboard>
 
                 if (shouldLogout == true) {
                   await AuthService.signOut();
+                  if (!mounted) return;
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => NoterHomeScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const NoterHomeScreen()),
                     (route) => false,
                   );
                 }
@@ -231,11 +303,11 @@ class AdminDashboardState extends State<AdminDashboard>
           ],
           bottom: TabBar(
             controller: _tabController,
-            tabs: [
-              Tab(icon: Icon(Icons.edit), text: 'Write Post'),
-              Tab(icon: Icon(Icons.list), text: 'Manage Posts'),
-              Tab(icon: Icon(Icons.today), text: 'Daily Content'),
-              Tab(icon: Icon(Icons.person), text: 'About'),
+            tabs: const [
+              Tab(icon: Icon(Icons.edit_outlined), text: 'Write Post'),
+              Tab(icon: Icon(Icons.list_alt_outlined), text: 'Manage Posts'),
+              Tab(icon: Icon(Icons.today_outlined), text: 'Daily Content'),
+              Tab(icon: Icon(Icons.person_outline), text: 'About'),
             ],
           ),
         ),
@@ -250,8 +322,8 @@ class AdminDashboardState extends State<AdminDashboard>
                   isLoading: _isLoading,
                   onRefresh: _loadPosts,
                 ),
-                DailyContentTab(),
-                EditAboutTab(),
+                const DailyContentTab(),
+                const EditAboutTab(),
               ],
             ),
           ],
