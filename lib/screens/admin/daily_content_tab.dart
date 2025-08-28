@@ -56,7 +56,7 @@ class DailyContentTabState extends State<DailyContentTab> {
       await DailyContentService.createOrUpdateDailyContent(content);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Daily content saved!'),
           backgroundColor: Colors.green,
         ),
@@ -78,7 +78,7 @@ class DailyContentTabState extends State<DailyContentTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,85 +86,106 @@ class DailyContentTabState extends State<DailyContentTab> {
             'Today\'s Daily Content',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          SizedBox(height: 16),
-
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Word of the Day',
-                    style: Theme.of(context).textTheme.titleMedium,
+          const SizedBox(height: 24),
+          _buildStyledCard(
+            context,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Word of the Day',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _wordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Word',
+                    border: OutlineInputBorder(),
+                    hintText: 'e.g., Resilience',
                   ),
-                  SizedBox(height: 8),
-                  TextField(
-                    controller: _wordController,
-                    decoration: InputDecoration(
-                      labelText: 'Word',
-                      border: OutlineInputBorder(),
-                      hintText: 'e.g., Resilience',
-                    ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _definitionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Definition',
+                    border: OutlineInputBorder(),
+                    hintText: 'The ability to recover from difficulties...',
                   ),
-                  SizedBox(height: 12),
-                  TextField(
-                    controller: _definitionController,
-                    decoration: InputDecoration(
-                      labelText: 'Definition',
-                      border: OutlineInputBorder(),
-                      hintText: 'The ability to recover from difficulties...',
-                    ),
-                    maxLines: 3,
-                  ),
-                ],
-              ),
+                  maxLines: 3,
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 16),
-
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Thought of the Day',
-                    style: Theme.of(context).textTheme.titleMedium,
+          const SizedBox(height: 16),
+          _buildStyledCard(
+            context,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Thought of the Day',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _thoughtController,
+                  decoration: const InputDecoration(
+                    labelText: 'Inspirational Thought',
+                    border: OutlineInputBorder(),
+                    hintText:
+                        'Your mental health is just as important as your physical health...',
                   ),
-                  SizedBox(height: 8),
-                  TextField(
-                    controller: _thoughtController,
-                    decoration: InputDecoration(
-                      labelText: 'Inspirational Thought',
-                      border: OutlineInputBorder(),
-                      hintText:
-                          'Your mental health is just as important as your physical health...',
-                    ),
-                    maxLines: 4,
-                  ),
-                ],
-              ),
+                  maxLines: 4,
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 24),
-
+          const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _isLoading ? null : _saveDailyContent,
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal,
               ),
               child: _isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
-                  : Text('Save Daily Content'),
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('Save Daily Content'),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStyledCard(BuildContext context, {required Widget child}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode
+              ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+              : [const Color(0xFFF1F5F9), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: child,
     );
   }
 

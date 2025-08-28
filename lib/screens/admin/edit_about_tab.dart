@@ -75,7 +75,7 @@ class EditAboutTabState extends State<EditAboutTab> {
       await AboutService.updateAboutContent(updatedAbout);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('About page updated!'),
           backgroundColor: Colors.green,
         ),
@@ -96,7 +96,7 @@ class EditAboutTabState extends State<EditAboutTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,59 +104,90 @@ class EditAboutTabState extends State<EditAboutTab> {
             'Edit About Page',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 24),
           if (_isLoading)
-            Center(child: CircularProgressIndicator())
+            const Center(child: CircularProgressIndicator())
           else
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _imageBytes != null
-                        ? MemoryImage(_imageBytes!)
-                        : (_aboutModel?.profilePictureUrl != null
+            _buildStyledCard(
+              context,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _imageBytes != null
+                          ? MemoryImage(_imageBytes!)
+                          : (_aboutModel?.profilePictureUrl != null
                                   ? NetworkImage(
                                       _aboutModel!.profilePictureUrl!,
                                     )
                                   : null)
                               as ImageProvider?,
-                    child:
-                        _image == null && _aboutModel?.profilePictureUrl == null
-                        ? Icon(Icons.person, size: 50)
-                        : null,
-                  ),
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _contentController,
-                  decoration: InputDecoration(
-                    labelText: 'About Content',
-                    border: OutlineInputBorder(),
-                    alignLabelWithHint: true,
-                  ),
-                  maxLines: 15,
-                  minLines: 10,
-                ),
-                SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _saveAboutContent,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.teal,
+                      child: _image == null &&
+                              _aboutModel?.profilePictureUrl == null
+                          ? const Icon(Icons.person_add_alt_1, size: 50)
+                          : null,
                     ),
-                    child: _isLoading
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text('Save About Page'),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: _contentController,
+                    decoration: const InputDecoration(
+                      labelText: 'About Content (Markdown supported)',
+                      border: OutlineInputBorder(),
+                      alignLabelWithHint: true,
+                    ),
+                    maxLines: 15,
+                    minLines: 10,
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _saveAboutContent,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.teal,
+                      ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Save About Page'),
+                    ),
+                  ),
+                ],
+              ),
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStyledCard(BuildContext context, {required Widget child}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode
+              ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+              : [const Color(0xFFF1F5F9), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: child,
     );
   }
 

@@ -108,114 +108,149 @@ class ManagePostsTab extends StatelessWidget {
         itemCount: posts.length,
         itemBuilder: (context, index) {
           final post = posts[index];
-          return Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              title: Text(
-                post.title,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(post.category.displayName),
-                  Text(
-                    'Created: ${DateFormat('MMM dd, yyyy').format(post.createdAt)}',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.favorite, size: 16, color: Colors.red),
-                      Text(' ${post.likesCount}'),
-                      SizedBox(width: 16),
-                      Icon(Icons.visibility, size: 16, color: Colors.blue),
-                      Text(' ${post.viewsCount}'),
-                    ],
-                  ),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: post.published ? Colors.green : Colors.orange,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      post.published ? 'Published' : 'Draft',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_outlined),
-                            SizedBox(width: 8),
-                            Text('Edit'),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 'toggle',
-                        child: Row(
-                          children: [
-                            Icon(
-                              post.published
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                            SizedBox(width: 8),
-                            Text(post.published ? 'Unpublish' : 'Publish'),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Delete', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                    ],
-                    onSelected: (value) {
-                      if (value == 'toggle') {
-                        _togglePublishStatus(context, post);
-                      } else if (value == 'delete') {
-                        _deletePost(context, post);
-                      } else if (value == 'edit') {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                              appBar: AppBar(title: Text('Edit Post')),
-                              body: WritePostTab(
-                                onPostCreated: onRefresh,
-                                postToEdit: post,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-              isThreeLine: true,
-            ),
-          );
+          return _buildPostCard(context, post);
         },
       ),
     );
   }
+
+  Widget _buildPostCard(BuildContext context, PostModel post) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode
+              ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+              : [const Color(0xFFF1F5F9), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        title: Text(
+          post.title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 8),
+            Text(post.category.displayName),
+            SizedBox(height: 4),
+            Text(
+              'Created: ${DateFormat('MMM dd, yyyy').format(post.createdAt)}',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.favorite, size: 16, color: Colors.red.withOpacity(0.7)),
+                Text(' ${post.likesCount}'),
+                SizedBox(width: 16),
+                Icon(Icons.visibility, size: 16, color: Colors.blue.withOpacity(0.7)),
+                Text(' ${post.viewsCount}'),
+              ],
+            ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: post.published
+                    ? Colors.green.withOpacity(0.2)
+                    : Colors.orange.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                post.published ? 'Published' : 'Draft',
+                style: TextStyle(
+                  color: post.published ? Colors.green : Colors.orange,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit_outlined, size: 20),
+                      SizedBox(width: 8),
+                      Text('Edit'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'toggle',
+                  child: Row(
+                    children: [
+                      Icon(
+                        post.published
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(post.published ? 'Unpublish' : 'Publish'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                      SizedBox(width: 8),
+                      Text('Delete', style: TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                ),
+              ],
+              onSelected: (value) {
+                if (value == 'toggle') {
+                  _togglePublishStatus(context, post);
+                } else if (value == 'delete') {
+                  _deletePost(context, post);
+                } else if (value == 'edit') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(title: Text('Edit Post')),
+                        body: WritePostTab(
+                          onPostCreated: onRefresh,
+                          postToEdit: post,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+        isThreeLine: true,
+      ),
+    );
+  }
 }
+
+
+

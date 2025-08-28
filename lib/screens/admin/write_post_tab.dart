@@ -45,7 +45,7 @@ class WritePostTabState extends State<WritePostTab> {
     if (_titleController.text.trim().isEmpty ||
         _contentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Title and content are required'),
           backgroundColor: Colors.red,
         ),
@@ -69,7 +69,7 @@ class WritePostTabState extends State<WritePostTab> {
         );
         await PostService.updatePost(updatedPost);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Post updated successfully!'),
             backgroundColor: Colors.green,
           ),
@@ -90,7 +90,7 @@ class WritePostTabState extends State<WritePostTab> {
         );
         await PostService.createPost(post);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Post saved successfully!'),
             backgroundColor: Colors.green,
           ),
@@ -122,7 +122,7 @@ class WritePostTabState extends State<WritePostTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -130,120 +130,153 @@ class WritePostTabState extends State<WritePostTab> {
             _isEditing ? 'Edit Post' : 'Write a New Post',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          SizedBox(height: 24),
-          Card(
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _titleController,
-                    decoration: InputDecoration(
-                      labelText: 'Post Title *',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.title),
+          const SizedBox(height: 24),
+          _buildStyledCard(
+            context,
+            child: Column(
+              children: [
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    labelText: 'Post Title *',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    prefixIcon: const Icon(Icons.title),
                   ),
-                  SizedBox(height: 16),
-                  DropdownButtonFormField<PostCategory>(
-                    value: _selectedCategory,
-                    decoration: InputDecoration(
-                      labelText: 'Category',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.category),
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<PostCategory>(
+                  value: _selectedCategory,
+                  decoration: InputDecoration(
+                    labelText: 'Category',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    items: PostCategory.values.map((category) {
-                      return DropdownMenuItem(
-                        value: category,
-                        child: Text(category.displayName),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() => _selectedCategory = value!);
-                    },
+                    prefixIcon: const Icon(Icons.category_outlined),
                   ),
-                ],
-              ),
+                  items: PostCategory.values.map((category) {
+                    return DropdownMenuItem(
+                      value: category,
+                      child: Text(category.displayName),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedCategory = value);
+                    }
+                  },
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _excerptController,
-                    decoration: InputDecoration(
-                      labelText: 'Excerpt (Optional)',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.short_text),
+          const SizedBox(height: 16),
+          _buildStyledCard(
+            context,
+            child: Column(
+              children: [
+                TextField(
+                  controller: _excerptController,
+                  decoration: InputDecoration(
+                    labelText: 'Excerpt (Optional)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    maxLines: 3,
+                    prefixIcon: const Icon(Icons.short_text),
                   ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: _contentController,
-                    decoration: InputDecoration(
-                      labelText: 'Post Content *',
-                      border: OutlineInputBorder(),
-                      alignLabelWithHint: true,
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _contentController,
+                  decoration: InputDecoration(
+                    labelText: 'Post Content *',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    maxLines: 15,
-                    minLines: 10,
+                    alignLabelWithHint: true,
                   ),
-                ],
-              ),
+                  maxLines: 15,
+                  minLines: 10,
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.publish,
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                  ),
-                  SizedBox(width: 8),
-                  Text('Publish'),
-                  Spacer(),
-                  Switch(
-                    value: _isPublished,
-                    onChanged: (value) {
-                      setState(() => _isPublished = value);
-                    },
-                  ),
-                ],
-              ),
+          const SizedBox(height: 16),
+          _buildStyledCard(
+            context,
+            child: Row(
+              children: [
+                const Icon(Icons.publish_outlined),
+                const SizedBox(width: 8),
+                const Text('Publish'),
+                const Spacer(),
+                Switch(
+                  value: _isPublished,
+                  onChanged: (value) {
+                    setState(() => _isPublished = value);
+                  },
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: _isLoading ? null : _savePost,
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               icon: _isLoading
                   ? Container()
                   : Icon(_isEditing ? Icons.update : Icons.save),
               label: _isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                   : Text(_isEditing ? 'Update Post' : 'Save Post'),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStyledCard(BuildContext context, {required Widget child}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode
+              ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+              : [const Color(0xFFF1F5F9), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: child,
     );
   }
 
