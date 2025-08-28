@@ -35,6 +35,7 @@ class EditAboutTabState extends State<EditAboutTab> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error loading about content: $e'),
@@ -42,7 +43,9 @@ class EditAboutTabState extends State<EditAboutTab> {
         ),
       );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -73,7 +76,7 @@ class EditAboutTabState extends State<EditAboutTab> {
       );
 
       await AboutService.updateAboutContent(updatedAbout);
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('About page updated!'),
@@ -82,6 +85,7 @@ class EditAboutTabState extends State<EditAboutTab> {
       );
       _loadAboutContent();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error saving about content: $e'),
@@ -89,7 +93,9 @@ class EditAboutTabState extends State<EditAboutTab> {
         ),
       );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

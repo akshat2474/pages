@@ -1,5 +1,6 @@
 import 'package:blog/screens/admin/edit_about_tab.dart';
 import 'package:blog/screens/blog/noter_home_screen.dart';
+import 'package:blog/widgets/blinking_background.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../models/post_model.dart';
@@ -66,6 +67,8 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
       ),
       body: Stack(
         children: [
+          if (isDarkMode)
+            const Positioned.fill(child: BlinkingDotsBackground()),
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -245,6 +248,7 @@ class AdminDashboardState extends State<AdminDashboard>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -313,6 +317,8 @@ class AdminDashboardState extends State<AdminDashboard>
         ),
         body: Stack(
           children: [
+            if (isDarkMode)
+              const Positioned.fill(child: BlinkingDotsBackground()),
             TabBarView(
               controller: _tabController,
               children: [

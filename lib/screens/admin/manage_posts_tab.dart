@@ -24,6 +24,7 @@ class ManagePostsTab extends StatelessWidget {
       final updatedPost = post.copyWith(published: !post.published);
       await PostService.updatePost(updatedPost);
 
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(post.published ? 'Post unpublished' : 'Post published'),
@@ -32,6 +33,7 @@ class ManagePostsTab extends StatelessWidget {
       );
       onRefresh();
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
       );
@@ -42,16 +44,16 @@ class ManagePostsTab extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Post'),
+        title: const Text('Delete Post'),
         content: Text('Are you sure you want to delete "${post.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -60,14 +62,16 @@ class ManagePostsTab extends StatelessWidget {
     if (confirmed == true) {
       try {
         await PostService.deletePost(post.id);
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Post deleted'),
             backgroundColor: Colors.green,
           ),
         );
         onRefresh();
       } catch (e) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error deleting post: $e'),
@@ -81,7 +85,7 @@ class ManagePostsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (posts.isEmpty) {
@@ -89,13 +93,13 @@ class ManagePostsTab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.article_outlined, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
+            const Icon(Icons.article_outlined, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
             Text(
               'No posts yet',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            Text('Create your first blog post using the Write Post tab'),
+            const Text('Create your first blog post using the Write Post tab'),
           ],
         ),
       );
@@ -104,7 +108,7 @@ class ManagePostsTab extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async => onRefresh(),
       child: ListView.builder(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         itemCount: posts.length,
         itemBuilder: (context, index) {
           final post = posts[index];
@@ -139,28 +143,31 @@ class ManagePostsTab extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         title: Text(
           post.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(post.category.displayName),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               'Created: ${DateFormat('MMM dd, yyyy').format(post.createdAt)}',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.favorite, size: 16, color: Colors.red.withOpacity(0.7)),
+                Icon(Icons.favorite,
+                    size: 16, color: Colors.red.withOpacity(0.7)),
                 Text(' ${post.likesCount}'),
-                SizedBox(width: 16),
-                Icon(Icons.visibility, size: 16, color: Colors.blue.withOpacity(0.7)),
+                const SizedBox(width: 16),
+                Icon(Icons.visibility,
+                    size: 16, color: Colors.blue.withOpacity(0.7)),
                 Text(' ${post.viewsCount}'),
               ],
             ),
@@ -170,7 +177,7 @@ class ManagePostsTab extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 color: post.published
                     ? Colors.green.withOpacity(0.2)
@@ -188,7 +195,7 @@ class ManagePostsTab extends StatelessWidget {
             ),
             PopupMenuButton(
               itemBuilder: (context) => [
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'edit',
                   child: Row(
                     children: [
@@ -208,12 +215,12 @@ class ManagePostsTab extends StatelessWidget {
                             : Icons.visibility_outlined,
                         size: 20,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(post.published ? 'Unpublish' : 'Publish'),
                     ],
                   ),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'delete',
                   child: Row(
                     children: [
@@ -233,7 +240,7 @@ class ManagePostsTab extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar: AppBar(title: Text('Edit Post')),
+                        appBar: AppBar(title: const Text('Edit Post')),
                         body: WritePostTab(
                           onPostCreated: onRefresh,
                           postToEdit: post,
@@ -251,6 +258,3 @@ class ManagePostsTab extends StatelessWidget {
     );
   }
 }
-
-
-

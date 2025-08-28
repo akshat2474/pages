@@ -68,6 +68,7 @@ class WritePostTabState extends State<WritePostTab> {
           published: _isPublished,
         );
         await PostService.updatePost(updatedPost);
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post updated successfully!'),
@@ -89,6 +90,7 @@ class WritePostTabState extends State<WritePostTab> {
           published: _isPublished,
         );
         await PostService.createPost(post);
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post saved successfully!'),
@@ -106,6 +108,7 @@ class WritePostTabState extends State<WritePostTab> {
 
       widget.onPostCreated();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error saving post: $e'),
@@ -137,23 +140,19 @@ class WritePostTabState extends State<WritePostTab> {
               children: [
                 TextField(
                   controller: _titleController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Post Title *',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.title),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.title),
                   ),
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<PostCategory>(
                   value: _selectedCategory,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Category',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.category_outlined),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.category_outlined),
                   ),
                   items: PostCategory.values.map((category) {
                     return DropdownMenuItem(
@@ -177,23 +176,19 @@ class WritePostTabState extends State<WritePostTab> {
               children: [
                 TextField(
                   controller: _excerptController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Excerpt (Optional)',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.short_text),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.short_text),
                   ),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _contentController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Post Content *',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    border: OutlineInputBorder(),
                     alignLabelWithHint: true,
                   ),
                   maxLines: 15,
@@ -228,22 +223,12 @@ class WritePostTabState extends State<WritePostTab> {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
               ),
               icon: _isLoading
                   ? Container()
                   : Icon(_isEditing ? Icons.update : Icons.save),
               label: _isLoading
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
+                  ? const CircularProgressIndicator(color: Colors.white)
                   : Text(_isEditing ? 'Update Post' : 'Save Post'),
             ),
           ),

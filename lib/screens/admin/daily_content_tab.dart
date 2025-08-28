@@ -54,7 +54,7 @@ class DailyContentTabState extends State<DailyContentTab> {
       );
 
       await DailyContentService.createOrUpdateDailyContent(content);
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Daily content saved!'),
@@ -64,6 +64,7 @@ class DailyContentTabState extends State<DailyContentTab> {
 
       _loadTodaysContent();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error saving: $e'),
@@ -71,7 +72,9 @@ class DailyContentTabState extends State<DailyContentTab> {
         ),
       );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
