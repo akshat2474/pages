@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -273,7 +272,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPixelCross(bool isDarkMode) {
-    return Container(
+    return SizedBox(
       width: 32,
       height: 32,
       child: CustomPaint(
@@ -283,7 +282,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPixelStethoscope(bool isDarkMode) {
-    return Container(
+    return SizedBox(
       width: 40,
       height: 40,
       child: CustomPaint(
