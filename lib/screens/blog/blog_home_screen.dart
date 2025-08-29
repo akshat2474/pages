@@ -159,7 +159,7 @@ class BlogHomeScreenState extends State<BlogHomeScreen> {
               end: Alignment.bottomRight,
               colors: isDarkMode
                   ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
-                  : [categoryColor.withOpacity(0.05), Colors.white],
+                  : [categoryColor.withValues(alpha:0.05), Colors.white],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -167,7 +167,7 @@ class BlogHomeScreenState extends State<BlogHomeScreen> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+                color: Colors.black.withValues(alpha:isDarkMode ? 0.2 : 0.04),
                 blurRadius: 15,
                 offset: const Offset(0, 4),
               )
@@ -180,7 +180,7 @@ class BlogHomeScreenState extends State<BlogHomeScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: categoryColor.withOpacity(0.1),
+                  color: categoryColor.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(

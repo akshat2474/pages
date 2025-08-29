@@ -96,7 +96,7 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
                     boxShadow: [
                       BoxShadow(
                         color:
-                            Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+                            Colors.black.withValues(alpha:isDarkMode ? 0.3 : 0.05),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       )
@@ -111,7 +111,7 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
                           color: Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.1),
+                              .withValues(alpha: .1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -150,10 +150,10 @@ class AdminLoginScreenState extends State<AdminLoginScreen> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
+                            color: Colors.red.withValues(alpha:0.1),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: Colors.red.withOpacity(0.3),
+                              color: Colors.red.withValues(alpha:0.3),
                             ),
                           ),
                           child: Text(

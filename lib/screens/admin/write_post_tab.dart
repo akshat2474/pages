@@ -255,7 +255,7 @@ class WritePostTabState extends State<WritePostTab> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha:isDarkMode ? 0.2 : 0.04),
             blurRadius: 15,
             offset: const Offset(0, 4),
           )

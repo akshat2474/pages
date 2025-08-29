@@ -115,7 +115,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPixelMedicalIcon(bool isDarkMode) {
-    return Container(
+    return SizedBox(
       width: 24,
       height: 24,
       child: CustomPaint(
@@ -242,7 +242,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPixelHeart(bool isDarkMode) {
-    return Container(
+    return SizedBox(
       width: 32,
       height: 32,
       child: CustomPaint(
@@ -252,7 +252,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPixelPill(bool isDarkMode) {
-    return Container(
+    return SizedBox(
       width: 32,
       height: 32,
       child: CustomPaint(
@@ -262,7 +262,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPixelSyringe(bool isDarkMode) {
-    return Container(
+    return SizedBox(
       width: 32,
       height: 32,
       child: CustomPaint(

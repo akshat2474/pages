@@ -18,6 +18,7 @@ import '../../widgets/animated_widgets.dart';
 import '../../widgets/skeleton_widgets.dart';
 import '../../utils/page_transitions.dart';
 import '../../widgets/footer.dart';
+import 'package:blog/widgets/app_drawer.dart';
 
 class GreenUnderline extends StatelessWidget {
   const GreenUnderline({super.key});
@@ -42,8 +43,8 @@ class PinkSquiggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final squiggleColor = isDarkMode
-        ? const Color(0xFF8B5CF6).withOpacity(0.6)
-        : Colors.pink.withOpacity(0.3);
+        ? const Color(0xFF8B5CF6).withValues(alpha:0.6)
+        : Colors.pink.withValues(alpha:0.3);
 
     return SizedBox(
       width: 80,
@@ -123,153 +124,128 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Stack(
-        children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final isDesktop = constraints.maxWidth > 800;
-              return CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(child: _buildHeader(isDesktop)),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        FadeInSlideUp(
-                          delay: const Duration(milliseconds: 200),
-                          child: _buildHeroSection(isDesktop),
-                        ),
-                        const SizedBox(height: 80),
-                        if (isLoading)
-                          const DailyContentSkeleton()
-                        else if (todaysContent != null)
-                          FadeInSlideUp(
-                            delay: const Duration(milliseconds: 400),
-                            child: _buildDailyContentSection(),
-                          ),
-                        const SizedBox(height: 80),
-                        FadeInSlideUp(
-                          delay: const Duration(milliseconds: 600),
-                          child: _buildFeaturedSection(isDesktop),
-                        ),
-                        const SizedBox(height: 80),
-                        const Footer(),
-                      ],
+      drawer: const AppDrawer(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isDesktop = constraints.maxWidth > 800;
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                elevation: 0,
+                pinned: true,
+                floating: true,
+                title: Text(
+                  'MindJourney',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                actions: isDesktop ? _buildDesktopActions(context) : null,
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    FadeInSlideUp(
+                      delay: const Duration(milliseconds: 200),
+                      child: _buildHeroSection(isDesktop),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
+                    const SizedBox(height: 80),
+                    if (isLoading)
+                      const DailyContentSkeleton()
+                    else if (todaysContent != null)
+                      FadeInSlideUp(
+                        delay: const Duration(milliseconds: 400),
+                        child: _buildDailyContentSection(),
+                      ),
+                    const SizedBox(height: 80),
+                    FadeInSlideUp(
+                      delay: const Duration(milliseconds: 600),
+                      child: _buildFeaturedSection(isDesktop),
+                    ),
+                    const SizedBox(height: 80),
+                    const Footer(),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildHeader(bool isDesktop) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'MindJourney',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          if (isDesktop)
-            Row(
-              children: [
-                Consumer<ThemeProvider>(
-                  builder: (context, themeProvider, child) {
-                    return ThemeToggleAnimation(
-                      isDarkMode: themeProvider.isDarkMode,
-                      onToggle: () => themeProvider.toggleTheme(),
-                    );
-                  },
-                ),
-                const SizedBox(width: 16),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => AboutPage()),
-                    );
-                  },
-                  child: Text(
-                    'About',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 24),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Scaffold(
-                          appBar: AppBar(title: const Text('All Articles')),
-                          body: const BlogHomeScreen(),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Articles',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 24),
-                StreamBuilder<AuthState>(
-                  stream: SupabaseConfig.client.auth.onAuthStateChange,
-                  builder: (context, snapshot) {
-                    final session = snapshot.data?.session;
-
-                    if (session != null && AuthService.isAdmin) {
-                      return ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.of(
-                            context,
-                          ).push(FadePageRoute(page: const AdminDashboard()));
-                        },
-                        icon: const Icon(Icons.dashboard, size: 16),
-                        label: const Text('Dashboard'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            SlideUpPageRoute(page: const AdminLoginScreen()),
-                          );
-                        },
-                        icon: const Icon(Icons.person_outline),
-                      );
-                    }
-                  },
-                ),
-              ],
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                // TODO: implement drawer
-              },
-            ),
-        ],
+  List<Widget> _buildDesktopActions(BuildContext context) {
+    return [
+      Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return ThemeToggleAnimation(
+            isDarkMode: themeProvider.isDarkMode,
+            onToggle: () => themeProvider.toggleTheme(),
+          );
+        },
       ),
-    );
+      const SizedBox(width: 16),
+      TextButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const AboutPage()));
+        },
+        child: Text(
+          'About',
+          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+        ),
+      ),
+      const SizedBox(width: 24),
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('All Articles')),
+                body: const BlogHomeScreen(),
+              ),
+            ),
+          );
+        },
+        child: Text(
+          'Articles',
+          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+        ),
+      ),
+      const SizedBox(width: 24),
+      StreamBuilder<AuthState>(
+        stream: SupabaseConfig.client.auth.onAuthStateChange,
+        builder: (context, snapshot) {
+          if (AuthService.isAdmin) {
+            return ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(FadePageRoute(page: const AdminDashboard()));
+              },
+              icon: const Icon(Icons.dashboard, size: 16),
+              label: const Text('Dashboard'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+            );
+          } else {
+            return IconButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(SlideUpPageRoute(page: const AdminLoginScreen()));
+              },
+              icon: const Icon(Icons.person_outline),
+            );
+          }
+        },
+      ),
+      const SizedBox(width: 24),
+    ];
   }
 
   Widget _buildHeroSection(bool isDesktop) {
@@ -284,10 +260,10 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.secondary.withValues(alpha:0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+                color: Theme.of(context).colorScheme.secondary.withValues(alpha:0.2),
               ),
             ),
             child: Text(
@@ -408,7 +384,7 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+            color: Colors.black.withValues(alpha:isDarkMode ? 0.3 : 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           )
@@ -422,7 +398,7 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF63C4B6).withOpacity(0.1),
+                  color: const Color(0xFF63C4B6).withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.wb_sunny_outlined,
@@ -572,7 +548,7 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
             children: [
               Icon(
                 Icons.format_quote,
-                color: const Color(0xFF63C4B6).withOpacity(0.7),
+                color: const Color(0xFF63C4B6).withValues(alpha:0.7),
                 size: 32,
               ),
               const SizedBox(width: 12),
@@ -661,7 +637,7 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
             end: Alignment.bottomRight,
             colors: isDarkMode
                 ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
-                : [categoryColor.withOpacity(0.05), Colors.white],
+                : [categoryColor.withValues(alpha:0.05), Colors.white],
           ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
@@ -669,7 +645,7 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+              color: Colors.black.withValues(alpha:isDarkMode ? 0.2 : 0.04),
               blurRadius: 15,
               offset: const Offset(0, 4),
             )
@@ -688,7 +664,7 @@ class NoterHomeScreenState extends State<NoterHomeScreen> {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: categoryColor.withOpacity(0.1),
+                      color: categoryColor.withValues(alpha:0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

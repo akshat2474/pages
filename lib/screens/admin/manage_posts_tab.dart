@@ -136,7 +136,7 @@ class ManagePostsTab extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha:isDarkMode ? 0.2 : 0.04),
             blurRadius: 15,
             offset: const Offset(0, 4),
           )
@@ -163,11 +163,11 @@ class ManagePostsTab extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.favorite,
-                    size: 16, color: Colors.red.withOpacity(0.7)),
+                    size: 16, color: Colors.red.withValues(alpha:0.7)),
                 Text(' ${post.likesCount}'),
                 const SizedBox(width: 16),
                 Icon(Icons.visibility,
-                    size: 16, color: Colors.blue.withOpacity(0.7)),
+                    size: 16, color: Colors.blue.withValues(alpha:0.7)),
                 Text(' ${post.viewsCount}'),
               ],
             ),
@@ -180,8 +180,8 @@ class ManagePostsTab extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 color: post.published
-                    ? Colors.green.withOpacity(0.2)
-                    : Colors.orange.withOpacity(0.2),
+                    ? Colors.green.withValues(alpha:0.2)
+                    : Colors.orange.withValues(alpha:0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
