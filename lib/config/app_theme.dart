@@ -29,11 +29,9 @@ class AppTheme {
       primary: primaryBrandColor,
       secondary: lightAccent,
       surface: lightCard,
-      background: lightBackground,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: lightText,
-      onBackground: lightText,
     ),
 
     scaffoldBackgroundColor: lightBackground,
@@ -167,11 +165,9 @@ class AppTheme {
       primary: primaryBrandColor,
       secondary: darkAccent,
       surface: darkCard,
-      background: darkBackground,
       onPrimary: darkBackground,
       onSecondary: darkBackground,
       onSurface: darkText,
-      onBackground: darkText,
     ),
 
     scaffoldBackgroundColor: darkBackground,
